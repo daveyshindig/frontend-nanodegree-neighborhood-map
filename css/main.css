@@ -170,8 +170,24 @@ nav a:hover {
 
 
 
+#map {
+  display: block;
+  height: 100%;
+  margin-left: 1%;
+  margin-right: 1%;
+}
 
+#mapDiv {
+  width: 100%;
+}
 
+.infoWindowContent {
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.firstHeading {
+}
 
 
 
