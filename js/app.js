@@ -1,9 +1,9 @@
-$("#mapDiv").append(googleMap);
-$("#map").append(map);
 
 /* ======= Model ======= */
 
 var model = {
+	mapDiv: "<div id='map'></div>",
+	map: null, // declares a global map variable.
 	"places": [
 		{
 			"name": "Yoga Honolulu",
@@ -24,12 +24,30 @@ var model = {
 /* ======= View Controller ======= */
 
 var viewController = {
+	init: function() {
 
+	},
+
+	getMap: function() {
+		return model.map;
+	},
+
+	getMapDiv: function() {
+		return model.mapDiv;
+	}
 };
 
 
 /* ======= View ======= */
 
-var view = {
+var mapView = {
+	init: function() {
 
+	},
+
+	render: function() {
+		$("#mapDiv").append(viewController.getMapDiv()),
+		$("#map").append(viewController.getMap()),
+	
+	}
 };
