@@ -30,8 +30,8 @@ function initializeMap() {
  	 */
 	function createMapMarker(placeData) {
 		// The next lines save location data from the search result object to local variables
-		var lat = placeData.geometry.location.k;  // latitude from the place service
-		var lon = placeData.geometry.location.B;  // longitude from the place service
+		var lat = placeData.geometry.location.A;  // latitude from the place service
+		var lon = placeData.geometry.location.F;  // longitude from the place service
 		var address = placeData.formatted_address;   // addy of the place from the place service
 		var place_id = placeData.place_id;        // used for more data about the place
 		var types = placeData.types;	      // types of the place ---"---
@@ -46,7 +46,7 @@ function initializeMap() {
 		// or hover over a pin on a map. They usually contain more information
 		// about a location.
 		var infoWindow = new google.maps.InfoWindow({
-			content: getContentHtml() 
+			content: getContentHtml()
 		});
 
 		google.maps.event.addListener(marker, 'click', function() {
@@ -67,7 +67,7 @@ function initializeMap() {
 	 */
 	function callback(results, status) {
 		if (status == google.maps.places.PlacesServiceStatus.OK) {
-			createMapMarker(results[0])
+			createMapMarker(results[0]);
 		};
 	};
 
@@ -96,34 +96,22 @@ function initializeMap() {
 		// actually searching for location data.
 		var service = new google.maps.places.PlacesService(map);
 		// Iterates through the array of locations, creates a search object for each location
-		for (place in locations) {
-			loc = locations[place];
+		locations.forEach(function(place) {
+			loc = place;
+			console.log(loc.name + " " + loc.address);
 			// the search request object
-			var request = { query: locations[place].address };
-			console.log(place);
-			console.log(locations[place]);
+			var request = { query: place.address };
 			// Actually searches the Google Maps API for location data and runs the callback 
 			// function with the search results after each search.
 			service.textSearch(request, callback);
-		};
+		});
 	};
 
 	// Sets the boundaries of the map based on pin locations
 	window.mapBounds = new google.maps.LatLngBounds();
-	// locations is an array of structs found in the mapBuilder.js file.
-	locations = spots.spots;
+	// locations is an array of structs found in the app.js file.
+	locations = model.places;
 	// pinPoster(locations) creates pins on the map for each location in
 	// the locations array
 	pinPoster(locations);
 };
-
-
-// Calls the initializeMap() function when the page loads
-window.addEventListener('load', initializeMap);
-
-// Vanilla JS way to listen for resizing of the window 
-// and adjust map bounds
-window.addEventListener('resize', function(e) {
-	// Make sure the map bounds get updated on page resize
-	map.fitBounds(mapBounds);
-});
