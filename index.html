@@ -10,13 +10,19 @@
 </head>
 <body>
   <div id="mapDiv">
-    <div id="header-container" class="header-container">
+    <div class="header-container">
       <h2>The Neighborhood of Kaimuki, Honolulu</h2>
+    </div>
+    <form class="query-container">
+      <input type="text" data-bind="textInput: query" name="query" placeholder="Filter">
+    </form>
+    <div class="list-container">
     </div>
     <div id="map">
     </div>
   </div>
 
+  <script src="js/knockout.js"></script>
   <script src="js/helper.js"></script>
   <!--
   The next line tells the browser where to download the JavaScript file

@@ -2,7 +2,6 @@
 /* ======= Model ======= */
 
 var model = {
-	map: null, // declares a global map variable.
 	"places": [
 		{
 			"name": "Yoga Honolulu",
@@ -15,8 +14,21 @@ var model = {
 			"address": "1145C 12th Ave, Honolulu, HI 96816 USA",
 			"description": "The best brunch.",
 			"website": "http://www.kokoheadcafe.com"			
+		},
+		{
+			"name": "Hale Vietnam",
+			"address": "1140 12th Ave, Honolulu, HI 96816 USA",
+			"description": "The best pho.",
+			"website": "https://www.facebook.com/pages/Hale-Vietnam-Restaurant/113853611976753"			
+		},
+		{
+			"name": "The Curb Kaimuki",
+			"address": "3538 Waialae Ave, Honolulu, HI 96816 USA",
+			"description": "The best espresso.",
+			"website": "https://www.thecurbco.com"			
 		}
-	]
+	],
+	"markers": []
 };
 
 
@@ -24,14 +36,13 @@ var model = {
 
 var viewController = {
 	init: function() {
-		model.map = initializeMap();
+		ko.applyBindings(appViewModel());
 		mapView.init();
 	},
 
 	getMap: function() {
 		return model.map;
-	},
-
+	}
 };
 
 
@@ -39,17 +50,36 @@ var viewController = {
 
 var mapView = {
 	init: function() {
-		this.render();
 		// Vanilla JS way to listen for resizing of the window 
 		// and adjust map bounds
 		window.addEventListener('resize', function(e) {
 			// Make sure the map bounds get updated on page resize
 			map.fitBounds(mapBounds);
 		});
+		this.render();
 	},
 
 	render: function() {
-		$("#map").append(viewController.getMap());
+	}
+};
+
+var searchView = {
+	init: function() {
+
+	},
+
+	render: function() {
+
+	}
+};
+
+var listView = {
+	init: function() {
+
+	},
+
+	render: function() {
+
 	}
 };
 
