@@ -12,10 +12,10 @@
 function appViewModel() {
 	self = this;
 	self.query = ko.observable('');
-	self.filteredArray;
+	self.filteredArray = [];
 	self.placesObservableArray = ko.observableArray(model.places);
 	self.locations = window.model.places; 
-	self.markers = ko.observableArray(window.model.markers);
+	self.markers = ko.observableArray();
 
 	/**
 	 * Called when page is loaded.
@@ -65,8 +65,7 @@ function appViewModel() {
 			bounds.extend(new google.maps.LatLng(lat, lon));
 			window.map.fitBounds(bounds);
 			window.map.setCenter(bounds.getCenter());
-			marker.name = locationObject.name;
-			markers.push(marker);
+			self.markers.push(marker);
 
 			/* Returns an HTML string that fills the marker's infoWindow. */
 			function getContentHtml() {
@@ -89,9 +88,9 @@ function appViewModel() {
 		function pinPoster(locations) {
 			var service = new google.maps.places.PlacesService(window.map);
 		
-			locations.forEach(function(place) {    
-				var request = {query: place.address};
-				service.textSearch(request, closureTrick(place));
+			locations.forEach(function(location) {    
+				var request = {query: location.address};
+				service.textSearch(request, closureTrick(location));
 			});
 		
 			/* We're storing the response in the location object now, and
@@ -118,26 +117,31 @@ function appViewModel() {
 	 */
 	function initializeQuery() {
 		self.filteredArray = ko.computed(function() {
-			$.grep(self.markers(), function(arrayItem) {
-				return arrayItem.title.toLowerCase().startsWith(self.query().toLowerCase());
+			$.grep(self.markers(), function(marker) {
+				return marker.title.toLowerCase().startsWith(self.query().toLowerCase());
 			});
-        	console.log(self.filteredArray);
 		});
 
 		self.filteredArray.subscribe(function() {
 			var newArray = ko.utils.compareArrays(self.markers(), self.filteredArray());
+        	console.log(self.filteredArray);
 	        ko.utils.arrayForEach(newArray, function(marker) {
 	            if (marker.status === 'deleted') {
-	                marker.setMap(null);
+	                marker.value.setMap(null);
 	            }
 	            else {
-	                marker.setMap(map);
+	                marker.value.setMap(map);
 	            };
 	        });
 		});		
 	}
 
+	function initializeList() {
+
+	}
+
 	initializeMap();
 	initializeQuery();
+	initializeList();
 }
 

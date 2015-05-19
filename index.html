@@ -10,6 +10,8 @@
 </head>
 <body>
   <div id="mapDiv">
+    <div id="map">
+    </div>
     <div class="header-container">
       <h2>The Neighborhood of Kaimuki, Honolulu</h2>
     </div>
@@ -17,8 +19,9 @@
       <input type="text" data-bind="textInput: query" name="query" placeholder="Filter">
     </form>
     <div class="list-container">
-    </div>
-    <div id="map">
+      <ul data-bind="foreach: filteredArray" >
+        <li data-bind="text: title"></li>
+      </ul>
     </div>
   </div>
 
