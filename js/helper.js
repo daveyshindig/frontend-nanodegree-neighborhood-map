@@ -113,23 +113,25 @@ function appViewModel() {
 		}
 	}
 
-	/* This is run immediately when DOM is ready. */
+	/* This is run immediately when DOM is ready. I adapted code for this from the following URL:
+	 * https://github.com/smith1jason/Udacity_Project_5/blob/master/js/script.js
+	 */
 	function initializeQuery() {
 		self.filteredArray = ko.computed(function() {
-			$.grep(markers(), function(arrayItem) {
-				console.log(arrayItem);
-				return arrayItem.name.toLowerCase().includes(self.query().toLowerCase());
+			$.grep(self.markers(), function(arrayItem) {
+				return arrayItem.title.toLowerCase().startsWith(self.query().toLowerCase());
 			});
+        	console.log(self.filteredArray);
 		});
 
 		self.filteredArray.subscribe(function() {
 			var newArray = ko.utils.compareArrays(self.markers(), self.filteredArray());
 	        ko.utils.arrayForEach(newArray, function(marker) {
 	            if (marker.status === 'deleted') {
-	                marker.value.setMap(null);
+	                marker.setMap(null);
 	            }
 	            else {
-	                marker.value.setMap(map);
+	                marker.setMap(map);
 	            };
 	        });
 		});		
