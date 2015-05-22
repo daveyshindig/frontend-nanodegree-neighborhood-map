@@ -7,18 +7,18 @@
  * @since 17 May 2015
  * @copyright Copyright 2015 David Wilkie
  */
+// "use strict";
 
-
-function appViewModel() {
-	self = this;
+function appViewModel(locations) {
+	var self = this;
 	self.query = ko.observable('');
 	self.filteredArray = [];
-	self.placesObservableArray = ko.observableArray(model.places);
-	self.locations = window.model.places; 
-	self.markers = ko.observableArray();
+	self.markerArray = ko.observableArray();
 
 	/**
 	 * Called when page is loaded.
+	 *
+	 * @param {Object} Locations from the model.
 	 */
 	function initializeMap() {
 		var mapOptions = {
@@ -29,7 +29,7 @@ function appViewModel() {
 		window.map = new google.maps.Map(document.querySelector('#map'), mapOptions);
 		window.mapBounds = new google.maps.LatLngBounds();
 
-		pinPoster(locations);
+		pinPoster();
 
 		/**
 		 * createMapMarker(placeData) reads Google Places search results to create map pins.
@@ -65,13 +65,13 @@ function appViewModel() {
 			bounds.extend(new google.maps.LatLng(lat, lon));
 			window.map.fitBounds(bounds);
 			window.map.setCenter(bounds.getCenter());
-			self.markers.push(marker);
+			self.markerArray.push(marker);
 
-			/* Returns an HTML string that fills the marker's infoWindow. */
+			/** Returns an HTML string that fills the marker's infoWindow. */
 			function getContentHtml() {
 				var content = '<div class="infoWindowContent">' +
 					'<h3 class="firstHeading">' + locationObject.name + '</h3>' +
-					'<h4>' + locationObject.address + '<br>' + locationObject.website + '<br></h4>' +
+					'<h4>' + locationObject.address + '&nbsp;//&nbsp;' + locationObject.website + '<br></h4>' +
 					'<h5>' + locationObject.description + '</h5>' +
 					'</div>';
 		
@@ -79,13 +79,11 @@ function appViewModel() {
 			}
 		}
 		
-		/*
+		/**
 		 * Takes in the array of locations created by locationFinder() and fires off Google 
 		 * place searches for each location.
-		 *
-		 * @param {Object} Locations from the model.
 		 */
-		function pinPoster(locations) {
+		function pinPoster() {
 			var service = new google.maps.places.PlacesService(window.map);
 		
 			locations.forEach(function(location) {    
@@ -112,18 +110,19 @@ function appViewModel() {
 		}
 	}
 
-	/* This is run immediately when DOM is ready. I adapted code for this from the following URL:
+	/** 
+	 * This is run immediately when DOM is ready. I adapted code for this from the following URL:
 	 * https://github.com/smith1jason/Udacity_Project_5/blob/master/js/script.js
 	 */
 	function initializeQuery() {
 		self.filteredArray = ko.computed(function() {
-			$.grep(self.markers(), function(marker) {
+			$.grep(self.markerArray(), function(marker) {
 				return marker.title.toLowerCase().startsWith(self.query().toLowerCase());
 			});
 		});
 
 		self.filteredArray.subscribe(function() {
-			var newArray = ko.utils.compareArrays(self.markers(), self.filteredArray());
+			var newArray = ko.utils.compareArrays(self.markerArray(), self.filteredArray());
         	console.log(self.filteredArray);
 	        ko.utils.arrayForEach(newArray, function(marker) {
 	            if (marker.status === 'deleted') {
