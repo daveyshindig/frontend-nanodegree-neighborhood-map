@@ -1,23 +1,22 @@
 <!DOCTYPE html>
 
 <head>
-  <link href="css/main.css" rel="stylesheet" type="text/css"></link>
-
-
   <meta name="viewport" content="width=device-width">
+  <meta charset="UTF-8">
+  <link href="css/main.css" rel="stylesheet" type="text/css"></link>
 </head>
 <body>
-  <div id="mapDiv">
+  <div class="container">
     <div id="map">
     </div>
     <div class="header-container">
       <h2>The Neighborhood of Kaimuki, Honolulu</h2>
     </div>
-    <form class="query-container">
-      <input type="text" data-bind="textInput: query" name="query" placeholder="Filter">
-    </form>
     <div class="list-container">
-      <ul data-bind="foreach: filteredArray" >
+      <form class="query-container">
+        <input type="text" data-bind="textInput: query" name="query" placeholder="Filter">
+      </form>
+      <ul data-bind="foreach: listArray" >
         <li data-bind="text: title"></li>
       </ul>
     </div>
@@ -28,6 +27,7 @@
   <script src="js/knockout.js"></script>
   <script src="js/helper.js"></script>
   <script src="js/underscore.js"></script>
+  <script src="js/knockout.google.maps-0.2.0.js"></script>
   <!--
   The next line tells the browser where to download the JavaScript file
   that builds the app dynamically when this website, index.html, is opened.
@@ -39,6 +39,6 @@
       <h3 class="firstHeading" data-bind="locationObject.name"</h3>
       <h4 data-bind="text: locationObject.address + <br> + locationObject.website"><br></h4>
       <h5 data-bind="locationObject.description"></h5>
-    </div>;
+    </div>
   </script>
 </body>
