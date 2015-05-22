@@ -1,8 +1,16 @@
+/*
+ * This is the main JS file. It contains the model, view, and view-controller.
+ *
+ * @author David Wilkie
+ * @since 19 May 2015
+ * @copyright Copyright 2015 David Wilkie
+ */
+ "use strict";
 
 /* ======= Model ======= */
 
 var model = {
-	"places": [
+	"locations": [
 		{
 			"name": "Yoga Honolulu",
 			"address": "1120 12th Ave, Honolulu, HI 96816 USA",
@@ -36,7 +44,7 @@ var model = {
 
 var viewController = {
 	init: function() {
-		ko.applyBindings(appViewModel());
+		ko.applyBindings(appViewModel(model.locations));
 		mapView.init();
 	},
 
