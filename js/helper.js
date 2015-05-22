@@ -25,6 +25,7 @@ function appViewModel(locations) {
 			disableDefaultUI: true,
 			mapTypeId: 'terrain'
 		};
+		var infoWindow = new google.maps.InfoWindow();
 		
 		window.map = new google.maps.Map(document.querySelector('#map'), mapOptions);
 		window.mapBounds = new google.maps.LatLngBounds();
@@ -53,13 +54,11 @@ function appViewModel(locations) {
 				position: placeData.geometry.location,
 				title: locationObject.name
 			});
-
-			var infoWindow = new google.maps.InfoWindow({
-				content: getContentHtml()
-			});
 		
 			google.maps.event.addListener(marker, 'click', function() {
-				infoWindow.open(window.map, marker);
+				map.setCenter(this.position)
+				infoWindow.setContent(getContentHtml());
+				infoWindow.open(window.map, this);
 			});
 		
 			bounds.extend(new google.maps.LatLng(lat, lon));
@@ -71,7 +70,7 @@ function appViewModel(locations) {
 			function getContentHtml() {
 				var content = '<div class="infoWindowContent">' +
 					'<h3 class="firstHeading">' + locationObject.name + '</h3>' +
-					'<h4>' + locationObject.address + '&nbsp;//&nbsp;' + locationObject.website + '<br></h4>' +
+					'<h4>' + locationObject.address + '<br><a href="' + locationObject.website + '">Website</a></h4>' +
 					'<h5>' + locationObject.description + '</h5>' +
 					'</div>';
 		
