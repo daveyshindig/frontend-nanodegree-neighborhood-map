@@ -14,9 +14,35 @@ function appViewModel(locationData) {
     self.infoWindow = new google.maps.InfoWindow();
     self.query = ko.observable('');
     self.filteredArray = [];
-    self.markerArray = ko.observableArray();
-    self.listArray = ko.observableArray();
+    self.locationObjectArray = ko.observableArray();
     self.locations = locationData;
+
+    /** 
+     * We use this to store both the data from the the model and the marker we create in a common
+     * location, and later any data brought in from 3rd-party APIs.
+    */
+    var LocationObject = function(locationData, marker) {
+        this.data = locationData;
+        this.marker = marker;
+        this.isVisible = ko.observable(true);
+    };
+
+    LocationObject.prototype.makeFocus = function() {
+        map.setCenter(this.marker.position);
+        infoWindow.setContent(getContentHtml(this.data));
+        infoWindow.open(window.map, this.marker);
+    };
+
+    /** Returns an HTML string that fills the marker's infoWindow. */
+    function getContentHtml(lod) {
+        var content = '<div class="infoWindowContent">' +
+            '<h3 class="firstHeading">' + lod.name + '</h3>' +
+            '<h4>' + lod.address + '<br><a href="' + lod.website + '">Website</a></h4>' +
+            '<h5>' + lod.description + '</h5>' +
+            '</div>';
+
+        return content;
+    }
 
     /**
      * Called when page is loaded.
@@ -61,26 +87,14 @@ function appViewModel(locationData) {
         
             google.maps.event.addListener(marker, 'click', function() {
                 map.setCenter(this.position);
-                infoWindow.setContent(getContentHtml());
+                infoWindow.setContent(getContentHtml(locationObject));
                 infoWindow.open(window.map, this);
             });
         
             bounds.extend(new google.maps.LatLng(lat, lon));
             window.map.fitBounds(bounds);
             window.map.setCenter(bounds.getCenter());
-            self.markerArray.push(marker);
-            self.listArray.push(marker);
-
-            /** Returns an HTML string that fills the marker's infoWindow. */
-            function getContentHtml() {
-                var content = '<div class="infoWindowContent">' +
-                    '<h3 class="firstHeading">' + locationObject.name + '</h3>' +
-                    '<h4>' + locationObject.address + '<br><a href="' + locationObject.website + '">Website</a></h4>' +
-                    '<h5>' + locationObject.description + '</h5>' +
-                    '</div>';
-        
-                return content;
-            }
+            self.locationObjectArray.push(new LocationObject(locationObject, marker));
         }
         
         /**
@@ -89,28 +103,36 @@ function appViewModel(locationData) {
          */
         function pinPoster() {
             var service = new google.maps.places.PlacesService(window.map);
+            var i = self.locations.length;
+            var request;
+
+            // We need to limit the number of API calls to 10 per 2 seconds
+            var interval = setInterval(function() { 
+                request = {query: self.locations[i-1].address};
+                service.textSearch(request, closureTrick(self.locations[i-1]));
+                i--;
+                if (!i) {
+                    clearInterval(interval);
+                };
+            }, 250);
+        }
         
-            self.locations.forEach(function(location) {    
-                var request = {query: location.address};
-                service.textSearch(request, closureTrick(location));
-            });
-        
-            /* We're storing the response in the location object now, and
-             * passing the whole location object to `createMapMarker`.
+        /* We're storing the response in the location object now, and
+         * passing the whole location object to `createMapMarker`.
+         */
+        function closureTrick(passedLocationObject) {
+            /*
+             * callback(results, status) makes sure the search returned results for a location.
+             * If so, it creates a new map marker for that location.
              */
-            function closureTrick(passedLocationObject) {
-                /*
-                 * callback(results, status) makes sure the search returned results for a location.
-                 * If so, it creates a new map marker for that location.
-                 */
-                function callback(results, status) {
-                    if (status === google.maps.places.PlacesServiceStatus.OK) {
-                        passedLocationObject.placeData = results[0];
-                        createMapMarker(passedLocationObject);
-                    }
+            function callback(results, status) {
+                console.log(status);
+                if (status === google.maps.places.PlacesServiceStatus.OK) {
+                    passedLocationObject.placeData = results[0];
+                    createMapMarker(passedLocationObject);
                 }
-                return callback;
             }
+            return callback;
         }
     }
 
@@ -120,34 +142,29 @@ function appViewModel(locationData) {
      */
     function initializeQuery() {
         self.query.subscribe(function() { 
-            self.filteredArray = ko.observableArray($.grep(self.markerArray(), function(marker) {
-                return marker.title.toLowerCase().startsWith(self.query().toLowerCase());
+            self.infoWindow.close();
+            self.filteredArray = ko.observableArray($.grep(self.locationObjectArray(), 
+                                                    function(locationObject) {
+                var title = locationObject.marker.title.toLowerCase() 
+                return title.startsWith(self.query().toLowerCase());
             }));
-            var newArray = ko.utils.compareArrays(self.markerArray(), self.filteredArray());
-            ko.utils.arrayForEach(newArray, function(marker) {
-                if (marker.status === 'deleted') {
-                    marker.value.setVisible(false);
+            var newArray = ko.utils.compareArrays(self.locationObjectArray(), 
+                                                  self.filteredArray());
+            ko.utils.arrayForEach(newArray, function(locationObject) {
+                if (locationObject.status === 'deleted') {
+                    console.log(locationObject);
+                    locationObject.value.marker.setVisible(false);
+                    locationObject.value.isVisible(false);
                 }
                 else {
-                    marker.value.setVisible(true);
+                    locationObject.value.marker.setVisible(true);
+                    locationObject.value.isVisible(true);
                 }
-            });
-        });
-    }
-
-    function initializeList() {
-        listArray.subscribe(function(newValue) {
-            alert(newValue);
-            google.maps.event.addListener(marker, 'click', function() {
-                map.setCenter(this.position);
-                infoWindow.setContent(getContentHtml());
-                infoWindow.open(window.map, this);
             });
         });
     }
 
     initializeMap();
     initializeQuery();
-    initializeList();
 }
 

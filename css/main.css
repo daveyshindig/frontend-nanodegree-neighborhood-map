@@ -181,7 +181,6 @@ nav a:hover {
 
 .list-container ul {
   width: 66%;
-  font-size: .8em;
   list-style-position: outside;
   color: white;
   margin: 0;
@@ -189,6 +188,10 @@ nav a:hover {
   list-style-type: none;
 }
 
+.list-container li {
+  cursor: pointer; cursor: hand;
+  font-size: .7em;
+}
 .query-container, 
 .query-container form {
   max-width: 100%;

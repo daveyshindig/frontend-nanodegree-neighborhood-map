@@ -16,8 +16,8 @@
       <form class="query-container">
         <input type="text" data-bind="textInput: query" name="query" placeholder="Filter">
       </form>
-      <ul data-bind="foreach: listArray" >
-        <li data-bind="text: title"></li>
+      <ul data-bind="foreach: locationObjectArray" >
+        <li data-bind="text: marker.title, visible: isVisible, click: makeFocus"></li>
       </ul>
     </div>
   </div>
