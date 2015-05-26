@@ -4,8 +4,9 @@
  * support my code in this project.
  *
  * @author David Wilkie
- * @since 17 May 2015
+ * @since 25 May 2015
  * @copyright Copyright 2015 David Wilkie
+ * @license MIT License
  */
 //"use strict";
 
@@ -16,24 +17,35 @@ function appViewModel(locationData) {
     self.filteredArray = [];
     self.locationObjectArray = ko.observableArray();
     self.locations = locationData;
-
+    self.locationObject = ko.observable();
     /** 
      * We use this to store both the data from the the model and the marker we create in a common
      * location, and later any data brought in from 3rd-party APIs.
-    */
+     *
+     * @param {Object} The item from our model.
+     * @param {Object} The corresponding Google Map marker.
+     */
     var LocationObject = function(locationData, marker) {
         this.data = locationData;
         this.marker = marker;
         this.isVisible = ko.observable(true);
     };
 
+    /**
+     * Set our infoWindow to point to this LocationObject and fill it with the right data.
+     */
     LocationObject.prototype.makeFocus = function() {
+        self.locationObject(this.data);
         map.setCenter(this.marker.position);
-        infoWindow.setContent(getContentHtml(this.data));
+        // I'm not using a KO template here because setContent KO observables
+        // don't seem to work when passed into the setContent function.
         infoWindow.open(window.map, this.marker);
     };
 
-    /** Returns an HTML string that fills the marker's infoWindow. */
+    /** Returns an HTML string that fills the marker's infoWindow. 
+     *
+     * @return {String} The HTML for the infoWindow.
+     */
     function getContentHtml(lod) {
         var content = '<div class="infoWindowContent">' +
             '<h3 class="firstHeading">' + lod.name + '</h3>' +
@@ -45,12 +57,22 @@ function appViewModel(locationData) {
     }
 
     /**
-     * Called when page is loaded.
+     * Called when page is loaded, this initializes a Google Map, sets markers on it for each of
+     * our locations, and centers the map.
      */
     function initializeMap() {
+        // Removes points of interest from map, which distract from my places
+        var noPoi = [{
+            featureType: "poi",
+            stylers: [
+                { visibility: "off" }
+            ]
+        }];
+
         var mapOptions = {
             disableDefaultUI: true,
-            mapTypeId: 'terrain'
+            mapTypeId: 'terrain',
+            styles: noPoi
         };
 
         self.locations = self.locations.sort(function(left, right) {
@@ -68,6 +90,7 @@ function appViewModel(locationData) {
          * about a single location.
          * 
          * @param {Object} The location object.
+         * @author MCS, via the Udacity forums, was very helpful.
          */
         function createMapMarker(locationObject) {
             // Major change: don't just use placeData to create a map marker, use an
@@ -98,7 +121,7 @@ function appViewModel(locationData) {
         }
         
         /**
-         * Takes in the array of locations created by locationFinder() and fires off Google 
+         * Iterates over the array of locations created by locationFinder() and fires off Google 
          * place searches for each location.
          */
         function pinPoster() {
@@ -117,13 +140,18 @@ function appViewModel(locationData) {
             }, 250);
         }
         
-        /* We're storing the response in the location object now, and
-         * passing the whole location object to `createMapMarker`.
+        /* We're storing the response in the location object now, and passing the whole location 
+         * object to `createMapMarker`.
+         *
+         * @param {Object} The locationObject from our model.
          */
         function closureTrick(passedLocationObject) {
             /*
              * callback(results, status) makes sure the search returned results for a location.
              * If so, it creates a new map marker for that location.
+             *
+             * @param {Object} results The query results returned by Google's API.
+             * @param {Object} status The query status returned by Google's API
              */
             function callback(results, status) {
                 console.log(status);

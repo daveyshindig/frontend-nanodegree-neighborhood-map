@@ -69,7 +69,7 @@ var model = {
 			"address": "1216 10th Ave, Honolulu, HI 96816",
 			"description": "Best ahi poke, although I rarely buy that due to sustainability " +
 						   "concerns. They have the best prices on alcohol, except for Costco " +
-						   "or maybe Don Quijote. Better selection here, though",
+						   "or maybe Don Quijote. Better selection here, though.",
 			"website": "http://www.tamurasfinewine.com"
 		},
 		{
@@ -130,7 +130,7 @@ var model = {
 			"name": "Kona Kai Sushi",
 			"address": "3579 Waialae Ave, Honolulu, HI 96816",
 			"description": "Kaimuki's Sasabune (famous Sushi-ya in Honolulu). Kinda pricey tho.",
-			"website": ""
+			"website": "http://google.com/?q=Kona Kai Sushi"
 		},
 		{
 			"name": "Cafe Miro",
@@ -152,7 +152,7 @@ var model = {
 			"address": "3566 Harding Ave # 104, Honolulu, HI 96816",
 			"description": "They have really comfy armchair seats, and you can rent the whole " +
 						   "place out and screen whatever you like. BYOB.",
-			"website": ""
+			"website": "http://google.com/?q=Movie Museum Kaimuki"
 		}
 	]
 };
