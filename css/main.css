@@ -209,13 +209,13 @@ nav a:hover {
   padding: .58em .58em .2em .58em;
 }
 
-.infoWindowContent {
-    margin-left: 5%;
-    margin-right: 5%;
+.info-window-content {
+  max-width: 300px;
 }
 
+.info-window-heading {
 
-
+}
 
 
 

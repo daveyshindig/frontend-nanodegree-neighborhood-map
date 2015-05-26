@@ -189,26 +189,6 @@ var mapView = {
 	}
 };
 
-var searchView = {
-	init: function() {
-
-	},
-
-	render: function() {
-
-	}
-};
-
-var listView = {
-	init: function() {
-
-	},
-
-	render: function() {
-
-	}
-};
-
 $(function() {
 	viewController.init();
 });

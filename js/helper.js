@@ -5,10 +5,9 @@
  *
  * @author David Wilkie
  * @since 25 May 2015
- * @copyright Copyright 2015 David Wilkie
  * @license MIT License
  */
-//"use strict";
+// "use strict";
 
 function appViewModel(locationData) {
     var self = this;
@@ -17,7 +16,8 @@ function appViewModel(locationData) {
     self.filteredArray = [];
     self.locationObjectArray = ko.observableArray();
     self.locations = locationData;
-    self.locationObject = ko.observable();
+    self.flickrApiKey = "2a84a691ec088cb7c51abc607e984b63";
+
     /** 
      * We use this to store both the data from the the model and the marker we create in a common
      * location, and later any data brought in from 3rd-party APIs.
@@ -29,17 +29,38 @@ function appViewModel(locationData) {
         this.data = locationData;
         this.marker = marker;
         this.isVisible = ko.observable(true);
+        this.flickrImgs = ko.observableArray();
     };
 
     /**
      * Set our infoWindow to point to this LocationObject and fill it with the right data.
      */
     LocationObject.prototype.makeFocus = function() {
-        self.locationObject(this.data);
-        map.setCenter(this.marker.position);
+        window.map.setCenter(this.marker.position);
+        self.infoWindow.setContent(getContentHtml(this.data));
         // I'm not using a KO template here because setContent KO observables
         // don't seem to work when passed into the setContent function.
-        infoWindow.open(window.map, this.marker);
+        self.infoWindow.open(window.map, this.marker);
+    };
+
+    /** 
+     * Make a call to the Flickr API to search for images for this object's infoWindow.
+     */ 
+    LocationObject.prototype.callFlickr = function() {
+        if (this.flickrImgs.length > 0) {
+            return;
+        };
+
+        var url = "https://api.flickr.com/services/rest";
+        var params = { 
+            method: "flickr.photos.search",
+            api_key: self.flickrApiKey,
+            text: "Koko Head Cafe Honolulu" 
+        };
+
+        $.get(url, params, function(data) {
+            alert("Data loaded: " + data);
+        });
     };
 
     /** Returns an HTML string that fills the marker's infoWindow. 
@@ -47,10 +68,10 @@ function appViewModel(locationData) {
      * @return {String} The HTML for the infoWindow.
      */
     function getContentHtml(lod) {
-        var content = '<div class="infoWindowContent">' +
-            '<h3 class="firstHeading">' + lod.name + '</h3>' +
+        var content = '<div class="info-window-content">' +
+            '<h3 class="info-window-heading">' + lod.name + '</h3>' +
             '<h4>' + lod.address + '<br><a href="' + lod.website + '">Website</a></h4>' +
-            '<h5>' + lod.description + '</h5>' +
+            '<p>' + lod.description + '</p>' +
             '</div>';
 
         return content;
@@ -74,10 +95,6 @@ function appViewModel(locationData) {
             mapTypeId: 'terrain',
             styles: noPoi
         };
-
-        self.locations = self.locations.sort(function(left, right) {
-            return (left.name < right.name ? -1 : 1) 
-        });
         
         window.map = new google.maps.Map(document.querySelector('#map'), mapOptions);
         window.mapBounds = new google.maps.LatLngBounds();
@@ -120,26 +137,6 @@ function appViewModel(locationData) {
             self.locationObjectArray.push(new LocationObject(locationObject, marker));
         }
         
-        /**
-         * Iterates over the array of locations created by locationFinder() and fires off Google 
-         * place searches for each location.
-         */
-        function pinPoster() {
-            var service = new google.maps.places.PlacesService(window.map);
-            var i = self.locations.length;
-            var request;
-
-            // We need to limit the number of API calls to 10 per 2 seconds
-            var interval = setInterval(function() { 
-                request = {query: self.locations[i-1].address};
-                service.textSearch(request, closureTrick(self.locations[i-1]));
-                i--;
-                if (!i) {
-                    clearInterval(interval);
-                };
-            }, 250);
-        }
-        
         /* We're storing the response in the location object now, and passing the whole location 
          * object to `createMapMarker`.
          *
@@ -161,6 +158,26 @@ function appViewModel(locationData) {
                 }
             }
             return callback;
+        }
+
+        /**
+         * Iterates over the array of locations created by locationFinder() and fires off Google 
+         * place searches for each location.
+         */
+        function pinPoster() {
+            var service = new google.maps.places.PlacesService(window.map);
+            var i = self.locations.length;
+            var request;
+
+            // We need to limit the number of API calls to 10 per 2 seconds
+            var interval = setInterval(function() { 
+                request = {query: self.locations[i-1].address};
+                service.textSearch(request, closureTrick(self.locations[i-1]));
+                i--;
+                if (!i) {
+                    clearInterval(interval);
+                };
+            }, 250);
         }
     }
 
