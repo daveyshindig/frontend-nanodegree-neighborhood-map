@@ -96,15 +96,15 @@ var model = {
 		{
 			"name": "Top of the Hill",
 			"address": "3579 Waialae Ave, Honolulu, HI 96816",
-			"description": "I don't like this place very much, but my friends don't seem to " +
-						   "mind. I like dives but it depresses me to be here.",
+			"description": "I don't like this place very much tbh, but my friends don't seem to " +
+						   "mind it. Dives are okay, but this one depresses me more than most do.",
 			"website": "https://plus.google.com/112189750107360673777/about?gl=us&hl=en"
 		},
 		{
 			"name": "Gecko Books",
 			"address": "1151 12th Avenue, Honolulu, HI 96816",
 			"description": "https://plus.google.com/101193926574315249955/about?gl=us&hl=en",
-			"website": "Cool little comic book shop with a good selection."
+			"website": "It's a comic book shop with a good selection."
 		},
 		{
 			"name": "Kaimuki Sundries",

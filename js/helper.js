@@ -17,6 +17,7 @@ function appViewModel(locationData) {
     self.locationObjectArray = ko.observableArray();
     self.locations = locationData;
     self.flickrApiKey = "2a84a691ec088cb7c51abc607e984b63";
+    self.xmlTemp;
 
     /** 
      * We use this to store both the data from the the model and the marker we create in a common
@@ -30,6 +31,7 @@ function appViewModel(locationData) {
         this.marker = marker;
         this.isVisible = ko.observable(true);
         this.flickrImgs = ko.observableArray();
+        this.flickrThumbs = ko.observableArray();
     };
 
     /**
@@ -37,42 +39,73 @@ function appViewModel(locationData) {
      */
     LocationObject.prototype.makeFocus = function() {
         window.map.setCenter(this.marker.position);
-        self.infoWindow.setContent(getContentHtml(this.data));
+        self.infoWindow.setContent(getContentHtml(this));
         // I'm not using a KO template here because setContent KO observables
         // don't seem to work when passed into the setContent function.
         self.infoWindow.open(window.map, this.marker);
-    };
+    }
+
+    /**
+     * Closure of the `callFlickr` function gets us 
+     */
+    LocationObject.prototype.successCallback = function() {
+            self.xmlTemp = data;
+            var photos = $(data).find("photo");
+            
+            // We're just getting the first 5 photos from the search, at most.            
+            for (i = 0; i < photos.length && i < 5; i++) {
+                var photo_id = $(photos[i]).attr('id');
+                var secret_id = $(photos[i]).attr('secret');
+                var farm_id = $(photos[i]).attr('farm');
+                var server_id =$(photos[i]).attr('server');
+                var thumbnail = "https://farm" + farm_id + ".staticflickr.com/" + server_id + "/" +
+                                photo_id + "_" + secret_id + "_t.jpg";
+                var photoUrl =  "https://farm" + farm_id + ".staticflickr.com/" + server_id + "/" +
+                                photo_id + "_" + secret_id + ".jpg";
+                
+                console.log(this);
+                this.flickrThumbs.push(thumbnail);
+                this.flickrImgs.push(photoUrl);
+            };
+    }
 
     /** 
      * Make a call to the Flickr API to search for images for this object's infoWindow.
+     *
+     * @return {String} The Ajax rexponse
      */ 
     LocationObject.prototype.callFlickr = function() {
-        if (this.flickrImgs.length > 0) {
+        // Return if we already have the data.
+        if (this.flickrImgs().length > 0) {
             return;
         };
 
-        var url = "https://api.flickr.com/services/rest";
+        var url = "https://api.flickr.com/services/rest/";
         var params = { 
             method: "flickr.photos.search",
             api_key: self.flickrApiKey,
-            text: "Koko Head Cafe Honolulu" 
+            text: this.data.name + " Honolulu" 
         };
 
-        $.get(url, params, function(data) {
-            alert("Data loaded: " + data);
-        });
-    };
+        $.get(url, params, this.successCallback);
+
+    }
 
     /** Returns an HTML string that fills the marker's infoWindow. 
      *
+     * @param {Object} lo The locationObject with all the data we need.
      * @return {String} The HTML for the infoWindow.
      */
-    function getContentHtml(lod) {
+    function getContentHtml(lo) {
+        ld = lo.data;
         var content = '<div class="info-window-content">' +
-            '<h3 class="info-window-heading">' + lod.name + '</h3>' +
-            '<h4>' + lod.address + '<br><a href="' + lod.website + '">Website</a></h4>' +
-            '<p>' + lod.description + '</p>' +
+            '<h3 class="info-window-heading">' + ld.name + '</h3>' +
+            '<h4>' + ld.address + ' // <a href="' + ld.website + '">Website</a></h4>' +
+            '<p>' + ld.description + '</p>' + 
+            '<div data-bind="html: this.flickrImgs" class="info-window-imgs"></div>' +
             '</div>';
+
+        var ajaxResponse = lo.callFlickr();
 
         return content;
     }
@@ -102,29 +135,29 @@ function appViewModel(locationData) {
         pinPoster();
 
         /**
-         * createMapMarker(placeData) reads Google Places search results to create map pins.
-         * placeData is the object returned from search results containing information
-         * about a single location.
+         * This function reads Google Places search results to create map pins.
          * 
-         * @param {Object} The location object.
+         * @param {Object} locationData The location data from our model.
          * @author MCS, via the Udacity forums, was very helpful.
          */
-        function createMapMarker(locationObject) {
+        function createMapMarker(locationData) {
             // Major change: don't just use placeData to create a map marker, use an
             // object that contains even more information! The path of least resistance
             // for me to make this happen is to just add the placeData to the locations
             // (model.places) object when the result comes back, and pass
             // `createMapMarker` the whole location object.
-            var placeData = locationObject.placeData;
+            var placeData = locationData.placeData;
             var lat = placeData.geometry.location.lat();
             var lon = placeData.geometry.location.lng();
             var bounds = window.mapBounds;
             var marker = new google.maps.Marker({
                 map: window.map,
                 position: placeData.geometry.location,
-                title: locationObject.name
+                title: locationData.name
             });
-        
+            var locationObject = new LocationObject(locationData, marker);
+
+            self.locationObjectArray.push(locationObject);
             google.maps.event.addListener(marker, 'click', function() {
                 map.setCenter(this.position);
                 infoWindow.setContent(getContentHtml(locationObject));
@@ -134,15 +167,14 @@ function appViewModel(locationData) {
             bounds.extend(new google.maps.LatLng(lat, lon));
             window.map.fitBounds(bounds);
             window.map.setCenter(bounds.getCenter());
-            self.locationObjectArray.push(new LocationObject(locationObject, marker));
         }
         
         /* We're storing the response in the location object now, and passing the whole location 
          * object to `createMapMarker`.
          *
-         * @param {Object} The locationObject from our model.
+         * @param {Object} locationData The location info from our model.
          */
-        function closureTrick(passedLocationObject) {
+        function closureTrick(locationData) {
             /*
              * callback(results, status) makes sure the search returned results for a location.
              * If so, it creates a new map marker for that location.
@@ -153,8 +185,8 @@ function appViewModel(locationData) {
             function callback(results, status) {
                 console.log(status);
                 if (status === google.maps.places.PlacesServiceStatus.OK) {
-                    passedLocationObject.placeData = results[0];
-                    createMapMarker(passedLocationObject);
+                    locationData.placeData = results[0];
+                    createMapMarker(locationData);
                 }
             }
             return callback;
@@ -197,7 +229,6 @@ function appViewModel(locationData) {
                                                   self.filteredArray());
             ko.utils.arrayForEach(newArray, function(locationObject) {
                 if (locationObject.status === 'deleted') {
-                    console.log(locationObject);
                     locationObject.value.marker.setVisible(false);
                     locationObject.value.isVisible(false);
                 }
