@@ -16,8 +16,8 @@ function appViewModel(locationData) {
     self.filteredArray = [];
     self.locationObjectArray = ko.observableArray();
     self.locations = locationData;
+    self.tryAgain = [];
     self.flickrApiKey = "2a84a691ec088cb7c51abc607e984b63";
-    self.xmlTemp;
 
     /** 
      * We use this to store both the data from the the model and the marker we create in a common
@@ -45,12 +45,15 @@ function appViewModel(locationData) {
         self.infoWindow.open(window.map, this.marker);
     }
 
+    /** 
+     * Honestly, I don't know if this callback pattern is necessary. I'm going to ask the Udacity
+     * forums to clarify things for me.
+     */
     LocationObject.prototype.flickrCallback = function() {
         /**
          * Closure of the `callFlickr` function gets us ... ?
          */
         successCallback = function(data) {
-            self.xmlTemp = data;
             var photos = $(data).find("photo");
             
             // We're just getting the first 5 photos from the search, at most.            
@@ -80,7 +83,6 @@ function appViewModel(locationData) {
      */ 
     LocationObject.prototype.callFlickr = function() {
         var that = this;
-
         // If we already have the data, go directly to adding them in the window.
         if (that.flickrImgs().length > 0) {
             return;
@@ -94,7 +96,6 @@ function appViewModel(locationData) {
         };
 
         $.get(url, params, function(data) {
-            self.xmlTemp = data;
             var photos = $(data).find("photo");
             
             // We're just getting the first 5 photos from the search, at most.            
@@ -110,16 +111,24 @@ function appViewModel(locationData) {
                 
                 that.flickrThumbs.push(thumbnail);
                 that.flickrImgs.push(photoUrl);
-                console.log(that.flickrThumbs());
             };
             that.addImagesToInfoWindow();
-        });
+        })
+            .fail(function() {
+                alert( "error" );
+            });
 
     }
 
+    /** 
+     * Populates `infoWindow` with our divs.
+     */
     LocationObject.prototype.addImagesToInfoWindow = function() { 
         var imgDiv = $("#info-window-imgs");
         imgDiv.empty();
+        if (!this.flickrThumbs().length) {
+            imgDiv.append("(sorry, no pics)");
+        }
         this.flickrThumbs().forEach(function(thumb) {
             imgDiv.append("<img src='" + thumb + "'>");
         });
@@ -131,7 +140,7 @@ function appViewModel(locationData) {
      * @return {String} The HTML for the infoWindow.
      */
     function getContentHtml(lo) {
-        ld = lo.data;
+        var ld = lo.data;
         var content = '<div class="info-window-content">' +
             '<h3 class="info-window-heading">' + ld.name + '</h3>' +
             '<h4>' + ld.address + ' // <a href="' + ld.website + '">Website</a></h4>' +
@@ -205,7 +214,7 @@ function appViewModel(locationData) {
         }
         
         /* We're storing the response in the location object now, and passing the whole location 
-         * object to `createMapMarker`.
+         * object to `createMapMarker`. 
          *
          * @param {Object} locationData The location info from our model.
          */
@@ -218,30 +227,38 @@ function appViewModel(locationData) {
              * @param {Object} status The query status returned by Google's API
              */
             function callback(results, status) {
-                console.log(status);
                 if (status === google.maps.places.PlacesServiceStatus.OK) {
                     locationData.placeData = results[0];
                     createMapMarker(locationData);
+                    for (i = 0; i < self.locations.length; i++) {
+                        if (locationData.name === self.locations[i].name) {
+                            self.locations.splice(i, 1);
+                        }
+                    }
                 }
             }
             return callback;
         }
 
         /**
-         * Iterates over the array of locations created by locationFinder() and fires off Google 
-         * place searches for each location.
+         * Iterates over the array of locations created by `locationFinder()` and fires off Google 
+         * place searches for each location. I'm going to do things a bit differently and use the 
+         * Google Places API to search for places by name, and return the coords for the pins.
          */
         function pinPoster() {
             var service = new google.maps.places.PlacesService(window.map);
             var i = self.locations.length;
+            var len = self.locations.length;
             var request;
 
             // We need to limit the number of API calls to 10 per 2 seconds
-            var interval = setInterval(function() { 
+            var interval = setInterval(function() {
                 request = {query: self.locations[i-1].address};
                 service.textSearch(request, closureTrick(self.locations[i-1]));
                 i--;
-                if (!i) {
+                // Break loop if the markers have all been set, or we've tried twice as many
+                // requests as we have markers.
+                if (!i && !self.tryAgain.length || i == len * -2) {
                     clearInterval(interval);
                 };
             }, 250);

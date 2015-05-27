@@ -23,5 +23,5 @@ This README file is the primary documentation for this software project. Further
 
 ### Known Issues
 
-- Google returns "OVER_REQUEST_LIMIT" errors even though the program's throttle'd to 8QPS, or 80% of (their stated limit)[https://developers.google.com/maps/documentation/business/articles/usage_limits#basics].
+- Google returns "OVER_REQUEST_LIMIT" errors even though the program's throttle'd to 8QPS, or 80% of [their stated limit](https://developers.google.com/maps/documentation/business/articles/usage_limits#basics).
 - The photos come form Flickr's search API and might not be relevant to the entries under which they appear.

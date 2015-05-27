@@ -15,46 +15,53 @@ var model = {
 			"name": "Yoga Honolulu",
 			"address": "1120 12th Ave, Honolulu, HI 96816 USA",
 			"description": "The best yoga studio.",
-			"website": "http://www.yogahnl.com"
+			"website": "http://www.yogahnl.com",
+			"type": "activity"
 		},
 		{
 			"name": "Koko Head Cafe",
 			"address": "1145C 12th Ave, Honolulu, HI 96816 USA",
 			"description": "The best brunch tbh. Their skillets are bomb.",
-			"website": "http://www.kokoheadcafe.com"			
+			"website": "http://www.kokoheadcafe.com"			,
+			"type": "restaurant"
 		},
 		{
 			"name": "Hale Vietnam",
 			"address": "1140 12th Ave, Honolulu, HI 96816 USA",
 			"description": "This is my favorite restaurant in Hawaii. It's humble, has a mellow " +
 						   "atmosphere, the best pho, and everything I've tried here is tasty.",
-			"website": "https://www.facebook.com/pages/Hale-Vietnam-Restaurant/113853611976753"			
+			"website": "https://www.facebook.com/pages/Hale-Vietnam-Restaurant/113853611976753"			,
+			"type": "restaurant"
 		},
 		{
 			"name": "The Curb Kaimuki",
 			"address": "3538 Waialae Ave, Honolulu, HI 96816 USA",
 			"description": "The best espresso.",
-			"website": "https://www.thecurbco.com"			
+			"website": "https://www.thecurbco.com"			,
+			"type": "cafe"
 		},
 		{
 			"name": "Via Gelato",
 			"address": "1142 12th Ave, Honolulu, HI 96816",
 			"description": "Super tasty gelato made right there, tasty panini and espresso. " + 
 						   "Nobody gets the panini, though; everyone's here for the gelato.",
-			"website": "http://www.viagelatohawaii.com"
+			"website": "http://www.viagelatohawaii.com",
+			"type": "cafe"
 		},
 		{
 			"name": "Town Restaurant",
 			"address": "3435 Waialae Ave #104, Honolulu, HI 96816",
 			"description": "This is the restaurant for localvores. They source as many " + 
 							"ingredients from Hawaii as they can.",
-			"website": "http://www.townkaimuki.com"
+			"website": "http://www.townkaimuki.com",
+			"type": "restaurant"
 		},
 		{
 			"name": "Mau'umae Nature Park",
 			"address": "Mau'Umae Nature Park, Honolulu, HI 96816 USA",
 			"description": "Just a tiny, peaceful little park where people hardly ever go.",
-			"website": ""
+			"website": "",
+			"type": "activity"
 		},
 		{
 			"name": "Yoga Hawaii",
@@ -62,7 +69,8 @@ var model = {
 			"description": "Another great yoga studio in Kaimuki. This one specializes in kripalu " +
 					   	   "and ashtanga styles. No wonder Kaimuki's full of people carrying yoga " +
 					       "mats.",
-			"website": "http://www.yoga-hawaii.com/"
+			"website": "http://www.yoga-hawaii.com/",
+			"type": "activity"
 		},
 		{
 			"name": "Tamura's Fine Wine & Liquors",
@@ -70,13 +78,15 @@ var model = {
 			"description": "Best ahi poke, although I rarely buy that due to sustainability " +
 						   "concerns. They have the best prices on alcohol, except for Costco " +
 						   "or maybe Don Quijote. Better selection here, though.",
-			"website": "http://www.tamurasfinewine.com"
+			"website": "http://www.tamurasfinewine.com",
+			"type": "shop"
 		},
 		{
 			"name": "Black Cat Salon",
 			"address": "3512 Waialae Ave, Honolulu, HI 96816 USA",
 			"description": "Some very good stylists and a hip atmosphere here.",
-			"website": "http://www.theblackcatsalon.com"
+			"website": "http://www.theblackcatsalon.com",
+			"type": "shop"
 		},
 		{
 			"name": "Big City Diner",
@@ -84,53 +94,62 @@ var model = {
 			"description": "The other awesome brunch spot. I like unpretentious restaurants, " +
 						   "and this fills a niche because Honolulu only has a few proper " +
 						   "diners." ,
-			"website": "http://bigcitydinerhawaii.com"
+			"website": "http://bigcitydinerhawaii.com",
+			"type": "restaurant"
 		},
 		{
 			"name": "To Thai For",
 			"address": "3571 Waialae Ave, Honolulu, HI 96816 USA",
 			"description": "I was mad at their name, it's such a cringe-y pun. But the food's " +
 						   "pretty good, here. I have to eat Thai at least once a week.",
-			"website": "http://www.itstothaifor.com"
+			"website": "http://www.itstothaifor.com",
+			"type": "restaurant"
 		},
 		{
 			"name": "Top of the Hill",
 			"address": "3579 Waialae Ave, Honolulu, HI 96816",
 			"description": "I don't like this place very much tbh, but my friends don't seem to " +
 						   "mind it. Dives are okay, but this one depresses me more than most do.",
-			"website": "https://plus.google.com/112189750107360673777/about?gl=us&hl=en"
+			"website": "https://plus.google.com/112189750107360673777/about?gl=us&hl=en",
+			"type": "bar"
 		},
 		{
 			"name": "Gecko Books",
 			"address": "1151 12th Avenue, Honolulu, HI 96816",
 			"description": "https://plus.google.com/101193926574315249955/about?gl=us&hl=en",
-			"website": "It's a comic book shop with a good selection."
+			"website": "It's a comic book shop with a good selection.",
+			"type": "shop"
 		},
 		{
 			"name": "Kaimuki Sundries",
 			"address": "3406 Waialae Ave, Honolulu, HI 96816",
 			"description": "Crack seed store. Classic local spot.",
-			"website": ""
+			"website": "",
+			"type": "shop"
 		},
 		{
 			"name": "Verde Kaimuki",
 			"address": "3607 Waialae Ave, Honolulu, HI 96816",
 			"description": "Best breakfast burritos, and other tasty tasty burritos. What is " +
-						   "better than a burrito? Prety much nothing, that's what.",
-			"website": ""
+						   "better than a burrito? There are better things, I guess, but only " +
+						   " slightly better.",
+			"website": "",
+			"type": "restaurant"
 		},
 		{
 			"name": "Brew'd Craftpub",
 			"address": "3441 Waialae Ave, Honolulu, HI 96816",
 			"description": "Good bar if you are comfortable spending $8-10 per glass of beer. " +
 						   "They could afford to lower prices by a dollar or two per drink doe.",
-			"website": "http://www.brewdcraftpub.com"
+			"website": "http://www.brewdcraftpub.com",
+			"type": "bar"
 		},
 		{
 			"name": "Kona Kai Sushi",
 			"address": "3579 Waialae Ave, Honolulu, HI 96816",
 			"description": "Kaimuki's Sasabune (famous Sushi-ya in Honolulu). Kinda pricey tho.",
-			"website": "http://google.com/?q=Kona Kai Sushi"
+			"website": "http://google.com/?q=Kona Kai Sushi",
+			"type": "restaurant"
 		},
 		{
 			"name": "Cafe Miro",
@@ -138,21 +157,24 @@ var model = {
 			"description": "One of the few places in Hawaii to get a good French meal. This is " +
 						   "a good place to impress a date. Seems like only Japanese people go " +
 						   "to this restaurant.",
-			"website": "http://cafemirohawaii.com"
+			"website": "http://cafemirohawaii.com",
+			"type": "restaurant"
 		},
 		{
 			"name": "Goodwill",
 			"address": "3638 Waialae Ave, Honolulu, HI 96816",
 			"description": "Everybody loves Goodwill, and you can score here sometimes. It's " +
 						   "not very picked over compared to most thrift stores.",
-			"website": "http://higoodwill.org"
+			"website": "http://higoodwill.org",
+			"type": "shop"
 		},
 		{
 			"name": "Movie Museum",
 			"address": "3566 Harding Ave # 104, Honolulu, HI 96816",
 			"description": "They have really comfy armchair seats, and you can rent the whole " +
 						   "place out and screen whatever you like. BYOB.",
-			"website": "http://google.com/?q=Movie Museum Kaimuki"
+			"website": "http://google.com/?q=Movie Museum Kaimuki",
+			"type": "activity"
 		}
 	]
 };

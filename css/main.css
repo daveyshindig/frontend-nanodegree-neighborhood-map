@@ -217,7 +217,14 @@ nav a:hover {
 
 }
 
+#info-window-imgs {
+  color: #aaa;
+  font-size: .8em;
+}
 
+#info-window-imgs img {
+  margin: 3px;
+}
 
 /* ==========================================================================
    Media Queries
