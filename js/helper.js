@@ -45,10 +45,11 @@ function appViewModel(locationData) {
         self.infoWindow.open(window.map, this.marker);
     }
 
-    /**
-     * Closure of the `callFlickr` function gets us 
-     */
-    LocationObject.prototype.successCallback = function() {
+    LocationObject.prototype.flickrCallback = function() {
+        /**
+         * Closure of the `callFlickr` function gets us ... ?
+         */
+        successCallback = function(data) {
             self.xmlTemp = data;
             var photos = $(data).find("photo");
             
@@ -67,6 +68,9 @@ function appViewModel(locationData) {
                 this.flickrThumbs.push(thumbnail);
                 this.flickrImgs.push(photoUrl);
             };
+        }
+
+        return successCallback;
     }
 
     /** 
@@ -75,8 +79,10 @@ function appViewModel(locationData) {
      * @return {String} The Ajax rexponse
      */ 
     LocationObject.prototype.callFlickr = function() {
-        // Return if we already have the data.
-        if (this.flickrImgs().length > 0) {
+        var that = this;
+
+        // If we already have the data, go directly to adding them in the window.
+        if (that.flickrImgs().length > 0) {
             return;
         };
 
@@ -84,11 +90,39 @@ function appViewModel(locationData) {
         var params = { 
             method: "flickr.photos.search",
             api_key: self.flickrApiKey,
-            text: this.data.name + " Honolulu" 
+            text: that.data.name + " Kaimuki" 
         };
 
-        $.get(url, params, this.successCallback);
+        $.get(url, params, function(data) {
+            self.xmlTemp = data;
+            var photos = $(data).find("photo");
+            
+            // We're just getting the first 5 photos from the search, at most.            
+            for (i = 0; i < photos.length && i < 5; i++) {
+                var photo_id = $(photos[i]).attr('id');
+                var secret_id = $(photos[i]).attr('secret');
+                var farm_id = $(photos[i]).attr('farm');
+                var server_id =$(photos[i]).attr('server');
+                var thumbnail = "https://farm" + farm_id + ".staticflickr.com/" + server_id + "/" +
+                                photo_id + "_" + secret_id + "_t.jpg";
+                var photoUrl =  "https://farm" + farm_id + ".staticflickr.com/" + server_id + "/" +
+                                photo_id + "_" + secret_id + ".jpg";
+                
+                that.flickrThumbs.push(thumbnail);
+                that.flickrImgs.push(photoUrl);
+                console.log(that.flickrThumbs());
+            };
+            that.addImagesToInfoWindow();
+        });
 
+    }
+
+    LocationObject.prototype.addImagesToInfoWindow = function() { 
+        var imgDiv = $("#info-window-imgs");
+        imgDiv.empty();
+        this.flickrThumbs().forEach(function(thumb) {
+            imgDiv.append("<img src='" + thumb + "'>");
+        });
     }
 
     /** Returns an HTML string that fills the marker's infoWindow. 
@@ -102,7 +136,8 @@ function appViewModel(locationData) {
             '<h3 class="info-window-heading">' + ld.name + '</h3>' +
             '<h4>' + ld.address + ' // <a href="' + ld.website + '">Website</a></h4>' +
             '<p>' + ld.description + '</p>' + 
-            '<div data-bind="html: this.flickrImgs" class="info-window-imgs"></div>' +
+            '<div data-bind="html: this.flickrImgs" id="info-window-imgs">' + 
+            '<img src="img/loading.gif" /></div>' +
             '</div>';
 
         var ajaxResponse = lo.callFlickr();

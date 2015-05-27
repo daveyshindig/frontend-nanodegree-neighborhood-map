@@ -7,9 +7,9 @@ Includes: map markers to identify popular locations or places you might like to 
 
 Simply [click on this text to view the project](www2.hawaii.edu/~dwilkie/udacity/frontend/p5-neighborhood-map/index.html "Neighborhood Map Project")
 
-### Copyright and licensing
+### Copyright, warranty and licensing
 
-All resources are open source (BSD license)
+All resources are open source under the MIT license. I provide no guarantees regarding this program, etc.
 
 ### Authors & Contact
 
@@ -21,3 +21,7 @@ GitHub: https://github.com/daveywilkie/
 
 This README file is the primary documentation for this software project. Further documentation is also maintained as docstrings within the source code files with the intention of conforming to the JSDoc 3 format. 
 
+### Known Issues
+
+- Google returns "OVER_REQUEST_LIMIT" errors even though the program's throttle'd to 8QPS, or 80% of (their stated limit)[https://developers.google.com/maps/documentation/business/articles/usage_limits#basics].
+- The photos come form Flickr's search API and might not be relevant to the entries under which they appear.
