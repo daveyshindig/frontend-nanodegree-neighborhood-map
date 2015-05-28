@@ -221,7 +221,10 @@ function appViewModel(locationData, mapStyles) {
                     createMapMarker(locationData);
                 }
                 else {
-                    console.log("NOT OK");
+                    // I unsuccessfully tried many ways of getting the program to retry
+                    // searching for the location when the search fails, but the fact that things
+                    // happen in the callback were just too confusing. So, error message only.
+                    console.log("Error: Google Places search returned " + status);
                 }
             }
             return callback;
