@@ -1,4 +1,4 @@
-/*
+/**
  * This is the main JS file. It contains the model, view, and view-controller.
  *
  * @author David Wilkie
