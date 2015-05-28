@@ -173,10 +173,12 @@ nav a:hover {
   background: #f16529;
   position: relative;
   z-index: 2;
-  width: 20%;
+  width: 175px;
   height: 33%;
   margin-top: 12px;
   margin-left: 0px;
+  -webkit-box-shadow: 0 5px 10px #aaa;
+          box-shadow: 0 5px 10px #aaa;
 }
 
 .list-container ul {
@@ -184,7 +186,7 @@ nav a:hover {
   list-style-position: outside;
   color: white;
   margin: 0;
-  padding: 4px;
+  padding-left: 10px;
   list-style-type: none;
 }
 
@@ -192,7 +194,7 @@ nav a:hover {
   cursor: pointer; cursor: hand;
   font-size: .7em;
 }
-.query-container, 
+.query-container,
 .query-container form {
   max-width: 100%;
   padding: .58em .58em .2em .58em;
@@ -210,7 +212,7 @@ nav a:hover {
 }
 
 .info-window-content {
-  max-width: 300px;
+  max-width: 330px;
 }
 
 .info-window-heading {
@@ -224,6 +226,21 @@ nav a:hover {
 
 #info-window-imgs img {
   margin: 3px;
+  cursor: pointer; cursor: hand;
+}
+
+#image-overlay {
+  position: absolute;
+  top: 125px;
+  left: 45%;
+  z-index: 4;
+  margin-left: -170px;
+  display: hidden;
+  width: 340px;
+  height: auto;
+  cursor: pointer; cursor: hand;
+  -webkit-box-shadow: 0 5px 10px #aaa;
+          box-shadow: 0 5px 10px #aaa;
 }
 
 /* ==========================================================================
