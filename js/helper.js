@@ -133,7 +133,7 @@ function appViewModel(locationData, mapStyles) {
         var ld = lo.data;
         var website = "";
         if (ld.website) {
-            website = '// <a href="' + ld.website + '">Website</a>';
+            website = ' // <a href="' + ld.website + '">Website</a>';
         }
 
         var content = '<div class="info-window-content">' +
@@ -234,11 +234,10 @@ function appViewModel(locationData, mapStyles) {
          */
         function pinPoster() {
             var service = new google.maps.places.PlacesService(window.map);
-            var i;
+            var i = self.locations.length;
             var request;
 
             // We need to limit the number of API calls to 10 per 2 seconds
-            i = self.locations.length;
             var interval = setInterval(function() {
                 request = {query: self.locations[i - 1].address};
                 service.textSearch(request, closureTrick(self.locations[i - 1]));
@@ -246,7 +245,7 @@ function appViewModel(locationData, mapStyles) {
                 if (!i) {
                     clearInterval(interval);
                 };
-            }, 250);
+            }, 240);
         }
 
         window.map = new google.maps.Map(document.querySelector('#map'), mapOptions);

@@ -36,7 +36,7 @@ var model = {
 		{
 			"name": "The Curb Kaimuki",
 			"address": "3538 Waialae Ave, Honolulu, HI 96816 USA",
-			"description": "The best espresso.",
+			"description": "Tiny place. Best espresso in town.",
 			"website": "https://www.thecurbco.com"			,
 			"icon": "cafe.png"
 		},
@@ -139,15 +139,17 @@ var model = {
 		{
 			"name": "Brew'd Craftpub",
 			"address": "3441 Waialae Ave, Honolulu, HI 96816",
-			"description": "Good bar if you are comfortable spending $8-10 per glass of beer. " +
-						   "They could afford to lower prices by a dollar or two per drink doe.",
+			"description": "Good bar if you are comfortable spending $8-12 per glass of beer. " +
+						   "They could afford to lower prices by a dollar or two per drink imo. " +
+						   "I feel kind of ripped off paying this much for beers.",
 			"website": "http://www.brewdcraftpub.com",
 			"icon": "bar.png"
 		},
 		{
 			"name": "Kona Kai Sushi",
 			"address": "3579 Waialae Ave, Honolulu, HI 96816",
-			"description": "Kaimuki's Sasabune (famous Sushi-ya in Honolulu). Kinda pricey tho.",
+			"description": "The sushi chef was trained at Honolulu's famous Sasabune sushi-ya, " +
+						   "and came to start his own restaurant in Kaimuki. Kinda pricey here.",
 			"website": "http://google.com/?q=Kona Kai Sushi",
 			"icon": "restaurant.png"
 		},
@@ -155,8 +157,8 @@ var model = {
 			"name": "Cafe Miro",
 			"address": "http://cafemirohawaii.com",
 			"description": "One of the few places in Hawaii to get a good French meal. This is " +
-						   "a good place to impress a date. Seems like only Japanese people go " +
-						   "to this restaurant.",
+						   "a memorable place for a date. Seems like mostly Japanese people go " +
+						   "to this restaurant, maybe because of the Japanese ownership.",
 			"website": "http://cafemirohawaii.com",
 			"icon": "restaurant.png"
 		},
@@ -170,9 +172,9 @@ var model = {
 		},
 		{
 			"name": "Movie Museum",
-			"address": "3566 Harding Ave # 104, Honolulu, HI 96816",
-			"description": "They have really comfy armchair seats, and you can rent the whole " +
-						   "place out and screen whatever you like. BYOB.",
+			"address": "3566 Harding Ave #104, Honolulu, HI 96816",
+			"description": "They have super comfy armchairs for seating, and you can rent the" +
+						   "whole place out to screen whatever you like. BYOB.",
 			"website": "http://google.com/?q=Movie Museum Kaimuki",
 			"icon": "cinema.png"
 		}
