@@ -52,16 +52,22 @@
 
 .sidebar-nav {
     position: absolute;
-    top: 0;
+    top: 102px;
     width: 250px;
     margin: 0;
     padding: 0;
     list-style: none;
 }
 
+.sidebar-nav ul { 
+    position: absolute;
+    left: 0;
+    top: 112px;
+}
+
 .sidebar-nav li {
     text-indent: 20px;
-    line-height: 40px;
+    line-height: 33px;
 }
 
 .sidebar-nav li a {
@@ -70,25 +76,28 @@
     color: #999999;
 }
 
-.sidebar-nav li a:hover {
+.sidebar-nav li:hover {
     text-decoration: none;
     color: #fff;
     background: rgba(255,255,255,0.2);
 }
 
-.sidebar-nav li a:active,
-.sidebar-nav li a:focus {
+.sidebar-nav li:active,
+.sidebar-nav li:focus {
     text-decoration: none;
 }
 
-.sidebar-nav > .sidebar-brand {
-    height: 65px;
+.sidebar-brand {
+    color: #999999;
+    height: 45px;
+    margin: 10px;
+    margin-left: 19px;
+    margin-bottom: 4px;
     font-size: 18px;
     line-height: 60px;
 }
 
 .sidebar-nav > .sidebar-brand a {
-    color: #999999;
 }
 
 .sidebar-nav > .sidebar-brand a:hover {

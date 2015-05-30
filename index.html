@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <link href="css/main.css" rel="stylesheet" type="text/css"></link>
   <link href="css/simple-sidebar.css" rel="stylesheet" type="text/css"></link>
-  <!-- Delivering the Bootstrap from an external CDN is sensible. -->
+  <!-- Delivering the Bootstrap from an external CDN is sensible enough. -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
 </head>
 <body>
@@ -13,13 +13,13 @@
 
     <!-- Sidebar -->
     <div id="sidebar-wrapper">
+      <a class="sidebar-brand" href="#">
+          Destinations
+      </a>      
+      <form class="query-container">
+        <input type="text" data-bind="textInput: query" name="query" placeholder="Filter">
+      </form>
       <ul class="sidebar-nav" data-bind="foreach: locationObjectArray">
-        <li class="sidebar-brand">
-            Places of Interest
-        </li>
-        <form class="query-container">
-          <input type="text" data-bind="textInput: query" name="query" placeholder="Filter">
-        </form>
         <li data-bind="text: marker.title, visible: isVisible, click: makeFocus">
         </li>
       </ul>
@@ -27,34 +27,17 @@
     <!-- /#sidebar-wrapper -->
 
     <!-- Page Content -->
-    <div id="page-content-wrapper">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-lg-12">
-            <div id="map">
-            </div>
-            <div class="header-container">
-              <h2>The Neighborhood of Kaimuki, Honolulu</h2>
-            </div>
-            <div id="image-overlay"></div>
-            <a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Toggle Menu</a>
-          </div>
-        </div>
-      </div>
+    <div id="map">
     </div>
+    <div class="header-container">
+      <h3>The Neighborhood of Kaimuki, Honolulu</h3>
+    </div>
+    <div id="image-overlay"></div>
+    <a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Menu</a>
     <!-- /#page-content-wrapper -->
 
-    </div>
-    <!-- /#wrapper -->
-
-    <!-- Menu Toggle Script -->
-    <script>
-    $("#menu-toggle").click(function(e) {
-        e.preventDefault();
-        $("#wrapper").toggleClass("toggled");
-    });
-    </script>
-
+  </div>
+  <!-- /#wrapper -->
 
 <!--   <div class="container">
     <div id="map">
@@ -84,3 +67,11 @@
   <script src="js/app.js"></script>
   <!-- Latest compiled and minified JavaScript -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+    <!-- Menu Toggle Script -->
+    <script>
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+    </script>

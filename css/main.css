@@ -70,18 +70,18 @@ body {
    =================== */
 
 .header-container {
-    border-bottom: 20px solid #e44d26;
+    border-bottom: 20px solid rgba(128, 178, 79, .6);
 }
 
 .footer-container,
 .main aside {
-    border-top: 20px solid #e44d26;
+    border-top: 20px solid #444;
 }
 
 .header-container,
 .footer-container,
 .main aside {
-    background: #f16529;
+    background: rgba(88, 138, 39, .8);
 }
 
 .title {
@@ -107,7 +107,7 @@ nav a {
     font-weight: bold;
 
     color: white;
-    background: #e44d26;
+    background: rgba(128, 178, 79, .8);
 }
 
 nav a:hover,
@@ -197,7 +197,11 @@ nav a:hover {
 .query-container,
 .query-container form {
   max-width: 100%;
-  padding: .58em .58em .2em .58em;
+  padding: 0 .58em .2em .58em;
+}
+
+form {
+  margin-left: 12px;
 }
 
 .header-container {
@@ -205,7 +209,7 @@ nav a:hover {
   z-index: 2;
 }
 
-.header-container h2 {
+.header-container h3 {
   margin: 0px !important;
   color: white;
   padding: .58em .58em .2em .58em;
@@ -213,10 +217,6 @@ nav a:hover {
 
 .info-window-content {
   max-width: 330px;
-}
-
-.info-window-heading {
-
 }
 
 #info-window-imgs {
@@ -246,6 +246,14 @@ nav a:hover {
 #image-overlay img {
   border: 2px white solid;
 }
+
+#menu-toggle {
+  position: relative;
+  z-index: 4;
+  margin: 10px;
+  margin-left: 15px;
+}
+
 /* ==========================================================================
    Media Queries
    ========================================================================== */
