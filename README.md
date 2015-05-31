@@ -7,13 +7,21 @@ Includes: map markers to identify popular locations or places you might like to 
 
 Simply [click on this text to view the project](www2.hawaii.edu/~dwilkie/udacity/frontend/p5-neighborhood-map/index.html "Neighborhood Map Project")
 
+### Installation 
+
+To install this software on your own machine:
+
+1. Clone the git repo to a directory on your computer (or download the zip from the sidebar on the right).
+2. In your terminal from the project's root directory, install the build dependencies with Node Package Manager by invoking `npm i`. If you don't have NPM, [here are installation instructions](http://nodejs.org/download/).
+3. Run `gulp`. If you don't have Gulp installed, run `npm i -g gulp` first. Your build will be in the *dist* folder.
+
 ### Copyright, warranty and licensing
 
 All resources are open source under the MIT license. I provide no guarantees regarding this program, etc.
 
 ### Authors & Contact
 
-*Davey Wilkie* // Web: http://www2.hawaii.edu/~dwilkie/ // GitHub: https://github.com/daveywilkie/
+_Davey Wilkie_ // Web: http://www2.hawaii.edu/~dwilkie/ // GitHub: https://github.com/daveywilkie/
 
 ### Project Documentation
 
