@@ -57,7 +57,7 @@ var model = {
 		},
 		{
 			"name": "Mau'umae Nature Park",
-			"address": "Mau'Umae Nature Park, Honolulu, HI 96816 USA",
+			"address": "3872 Claudine St, Honolulu, HI 96816 USA",
 			"description": "Just a tiny, peaceful little park where people hardly ever go.",
 			"website": "",
 			"icon": "outdoor.png"

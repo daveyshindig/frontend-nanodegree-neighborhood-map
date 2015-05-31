@@ -2,7 +2,6 @@ var gulp = require('gulp');
 var gutil = require('gutil');
 var jshint = require('gulp-jshint');
 var uglify = require('gulp-uglify');
-var concat = require('gulp-concat');
 var cssmin = require('gulp-cssmin');
 
 // Command line option:
@@ -58,10 +57,9 @@ gulp.task('lint', function() {
 			   .pipe(jshint.reporter('default'));
 });
 
-// Concatenate & Minify JS
+// Minify JS
 gulp.task('scripts', function() {
 	return gulp.src('js/*.js')
-		.pipe(concat('app.min.js'))
 		.pipe(uglify())
 		.pipe(gulp.dest('dist/js'));
 });
