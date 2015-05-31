@@ -5,7 +5,7 @@ Includes: map markers to identify popular locations or places you might like to 
 
 ### Instructions
 
-Simply [click on this text to view the project](www2.hawaii.edu/~dwilkie/udacity/frontend/p5-neighborhood-map/index.html "Neighborhood Map Project")
+Simply [click on this text to view the project](http://www2.hawaii.edu/~dwilkie/udacity/frontend/p5-neighborhood-map/index.html "Neighborhood Map Project")
 
 ### Installation 
 
