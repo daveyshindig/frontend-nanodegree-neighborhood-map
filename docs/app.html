@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>app.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page_wrapper">
+            <div id="jump_page">
+              
+                
+                <a class="source" href="app.html">
+                  app.js
+                </a>
+              
+                
+                <a class="source" href="helper.html">
+                  helper.js
+                </a>
+              
+            </div>
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>app.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/**
+ * This is the main JS file. It contains the model, view, and view-controller.
+ *
+ * @author David Wilkie
+ * @since 19 May 2015
+ * @copyright Copyright 2015 David Wilkie
+ */</span>
+
+<span class="hljs-comment">/* ======= Model ======= */</span>
+
+<span class="hljs-keyword">var</span> model = {
+	<span class="hljs-string">"locations"</span>: [
+		{
+			<span class="hljs-string">"name"</span>: <span class="hljs-string">"Yoga Honolulu"</span>,
+			<span class="hljs-string">"address"</span>: <span class="hljs-string">"1120 12th Ave, Honolulu, HI 96816 USA"</span>,
+			<span class="hljs-string">"description"</span>: <span class="hljs-string">"The best yoga studio."</span>,
+			<span class="hljs-string">"website"</span>: <span class="hljs-string">"http://www.yogahnl.com"</span>,
+			<span class="hljs-string">"icon"</span>: <span class="hljs-string">"yoga.png"</span>
+		},
+		{
+			<span class="hljs-string">"name"</span>: <span class="hljs-string">"Koko Head Cafe"</span>,
+			<span class="hljs-string">"address"</span>: <span class="hljs-string">"1145C 12th Ave, Honolulu, HI 96816 USA"</span>,
+			<span class="hljs-string">"description"</span>: <span class="hljs-string">"The best brunch tbh. Their skillets are bomb."</span>,
+			<span class="hljs-string">"website"</span>: <span class="hljs-string">"http://www.kokoheadcafe.com"</span>			,
+			<span class="hljs-string">"icon"</span>: <span class="hljs-string">"restaurant.png"</span>
+		},
+		{
+			<span class="hljs-string">"name"</span>: <span class="hljs-string">"Hale Vietnam"</span>,
+			<span class="hljs-string">"address"</span>: <span class="hljs-string">"1140 12th Ave, Honolulu, HI 96816 USA"</span>,
+			<span class="hljs-string">"description"</span>: <span class="hljs-string">"This is my favorite restaurant in Hawaii. It's humble, has a mellow "</span> +
+						   <span class="hljs-string">"atmosphere, the best pho, and everything I've tried here is tasty."</span>,
+			<span class="hljs-string">"website"</span>: <span class="hljs-string">"https://www.facebook.com/pages/Hale-Vietnam-Restaurant/113853611976753"</span>			,
+			<span class="hljs-string">"icon"</span>: <span class="hljs-string">"restaurant.png"</span>
+		},
+		{
+			<span class="hljs-string">"name"</span>: <span class="hljs-string">"The Curb Kaimuki"</span>,
+			<span class="hljs-string">"address"</span>: <span class="hljs-string">"3538 Waialae Ave, Honolulu, HI 96816 USA"</span>,
+			<span class="hljs-string">"description"</span>: <span class="hljs-string">"Tiny place. Best espresso in town."</span>,
+			<span class="hljs-string">"website"</span>: <span class="hljs-string">"https://www.thecurbco.com"</span>			,
+			<span class="hljs-string">"icon"</span>: <span class="hljs-string">"cafe.png"</span>
+		},
+		{
+			<span class="hljs-string">"name"</span>: <span class="hljs-string">"Via Gelato"</span>,
+			<span class="hljs-string">"address"</span>: <span class="hljs-string">"1142 12th Ave, Honolulu, HI 96816"</span>,
+			<span class="hljs-string">"description"</span>: <span class="hljs-string">"Super tasty gelato made right there, tasty panini and espresso. "</span> + 
+						   <span class="hljs-string">"Nobody gets the panini, though; everyone's here for the gelato."</span>,
+			<span class="hljs-string">"website"</span>: <span class="hljs-string">"http://www.viagelatohawaii.com"</span>,
+			<span class="hljs-string">"icon"</span>: <span class="hljs-string">"cafe.png"</span>
+		},
+		{
+			<span class="hljs-string">"name"</span>: <span class="hljs-string">"Town Restaurant"</span>,
+			<span class="hljs-string">"address"</span>: <span class="hljs-string">"3435 Waialae Ave #104, Honolulu, HI 96816"</span>,
+			<span class="hljs-string">"description"</span>: <span class="hljs-string">"This is the restaurant for localvores. They source as many "</span> + 
+							<span class="hljs-string">"ingredients from Hawaii as they can."</span>,
+			<span class="hljs-string">"website"</span>: <span class="hljs-string">"http://www.townkaimuki.com"</span>,
+			<span class="hljs-string">"icon"</span>: <span class="hljs-string">"restaurant.png"</span>
+		},
+		{
+			<span class="hljs-string">"name"</span>: <span class="hljs-string">"Mau'umae Nature Park"</span>,
+			<span class="hljs-string">"address"</span>: <span class="hljs-string">"Mau'Umae Nature Park, Honolulu, HI 96816 USA"</span>,
+			<span class="hljs-string">"description"</span>: <span class="hljs-string">"Just a tiny, peaceful little park where people hardly ever go."</span>,
+			<span class="hljs-string">"website"</span>: <span class="hljs-string">""</span>,
+			<span class="hljs-string">"icon"</span>: <span class="hljs-string">"outdoor.png"</span>
+		},
+		{
+			<span class="hljs-string">"name"</span>: <span class="hljs-string">"Yoga Hawaii"</span>,
+			<span class="hljs-string">"address"</span>: <span class="hljs-string">"1152 Koko Head Ave, Honolulu, HI 96816"</span>,
+			<span class="hljs-string">"description"</span>: <span class="hljs-string">"Another great yoga studio in Kaimuki. This one specializes in kripalu "</span> +
+					   	   <span class="hljs-string">"and ashtanga styles. No wonder Kaimuki's full of people carrying yoga "</span> +
+					       <span class="hljs-string">"mats."</span>,
+			<span class="hljs-string">"website"</span>: <span class="hljs-string">"http://www.yoga-hawaii.com/"</span>,
+			<span class="hljs-string">"icon"</span>: <span class="hljs-string">"yoga.png"</span>
+		},
+		{
+			<span class="hljs-string">"name"</span>: <span class="hljs-string">"Tamura's Fine Wine &amp; Liquors"</span>,
+			<span class="hljs-string">"address"</span>: <span class="hljs-string">"1216 10th Ave, Honolulu, HI 96816"</span>,
+			<span class="hljs-string">"description"</span>: <span class="hljs-string">"Best ahi poke, although I rarely buy that due to sustainability "</span> +
+						   <span class="hljs-string">"concerns. They have the best prices on alcohol, except for Costco "</span> +
+						   <span class="hljs-string">"or maybe Don Quijote. Better selection here, though."</span>,
+			<span class="hljs-string">"website"</span>: <span class="hljs-string">"http://www.tamurasfinewine.com"</span>,
+			<span class="hljs-string">"icon"</span>: <span class="hljs-string">"shop.png"</span>
+		},
+		{
+			<span class="hljs-string">"name"</span>: <span class="hljs-string">"Black Cat Salon"</span>,
+			<span class="hljs-string">"address"</span>: <span class="hljs-string">"3512 Waialae Ave, Honolulu, HI 96816 USA"</span>,
+			<span class="hljs-string">"description"</span>: <span class="hljs-string">"Some very good stylists and a hip atmosphere here."</span>,
+			<span class="hljs-string">"website"</span>: <span class="hljs-string">"http://www.theblackcatsalon.com"</span>,
+			<span class="hljs-string">"icon"</span>: <span class="hljs-string">"shop.png"</span>
+		},
+		{
+			<span class="hljs-string">"name"</span>: <span class="hljs-string">"Big City Diner"</span>,
+			<span class="hljs-string">"address"</span>: <span class="hljs-string">"3565 Waialae Ave, Honolulu, HI 96816"</span>,
+			<span class="hljs-string">"description"</span>: <span class="hljs-string">"The other awesome brunch spot. I like unpretentious restaurants, "</span> +
+						   <span class="hljs-string">"and this fills a niche because Honolulu only has a few proper "</span> +
+						   <span class="hljs-string">"diners."</span> ,
+			<span class="hljs-string">"website"</span>: <span class="hljs-string">"http://bigcitydinerhawaii.com"</span>,
+			<span class="hljs-string">"icon"</span>: <span class="hljs-string">"restaurant.png"</span>
+		},
+		{
+			<span class="hljs-string">"name"</span>: <span class="hljs-string">"To Thai For"</span>,
+			<span class="hljs-string">"address"</span>: <span class="hljs-string">"3571 Waialae Ave, Honolulu, HI 96816 USA"</span>,
+			<span class="hljs-string">"description"</span>: <span class="hljs-string">"I was mad at their name, it's such a cringe-y pun. But the food's "</span> +
+						   <span class="hljs-string">"pretty good, here. I have to eat Thai at least once a week."</span>,
+			<span class="hljs-string">"website"</span>: <span class="hljs-string">"http://www.itstothaifor.com"</span>,
+			<span class="hljs-string">"icon"</span>: <span class="hljs-string">"restaurant.png"</span>
+		},
+		{
+			<span class="hljs-string">"name"</span>: <span class="hljs-string">"Top of the Hill"</span>,
+			<span class="hljs-string">"address"</span>: <span class="hljs-string">"3579 Waialae Ave, Honolulu, HI 96816"</span>,
+			<span class="hljs-string">"description"</span>: <span class="hljs-string">"I don't like this place very much tbh, but my friends don't seem to "</span> +
+						   <span class="hljs-string">"mind it. Dives are okay, but this one depresses me more than most do."</span>,
+			<span class="hljs-string">"website"</span>: <span class="hljs-string">"https://plus.google.com/112189750107360673777/about?gl=us&amp;hl=en"</span>,
+			<span class="hljs-string">"icon"</span>: <span class="hljs-string">"bar.png"</span>
+		},
+		{
+			<span class="hljs-string">"name"</span>: <span class="hljs-string">"Gecko Books"</span>,
+			<span class="hljs-string">"address"</span>: <span class="hljs-string">"1151 12th Avenue, Honolulu, HI 96816"</span>,
+			<span class="hljs-string">"description"</span>: <span class="hljs-string">"https://plus.google.com/101193926574315249955/about?gl=us&amp;hl=en"</span>,
+			<span class="hljs-string">"website"</span>: <span class="hljs-string">"It's a comic book shop with a good selection."</span>,
+			<span class="hljs-string">"icon"</span>: <span class="hljs-string">"shop.png"</span>
+		},
+		{
+			<span class="hljs-string">"name"</span>: <span class="hljs-string">"Kaimuki Sundries"</span>,
+			<span class="hljs-string">"address"</span>: <span class="hljs-string">"3406 Waialae Ave, Honolulu, HI 96816"</span>,
+			<span class="hljs-string">"description"</span>: <span class="hljs-string">"Just a cheap little convenience store."</span>,
+			<span class="hljs-string">"website"</span>: <span class="hljs-string">""</span>,
+			<span class="hljs-string">"icon"</span>: <span class="hljs-string">"shop.png"</span>
+		},
+		{
+			<span class="hljs-string">"name"</span>: <span class="hljs-string">"Verde Kaimuki"</span>,
+			<span class="hljs-string">"address"</span>: <span class="hljs-string">"3607 Waialae Ave, Honolulu, HI 96816"</span>,
+			<span class="hljs-string">"description"</span>: <span class="hljs-string">"Best breakfast burritos, and other tasty tasty burritos. What is "</span> +
+						   <span class="hljs-string">"better than a burrito? There are better things, I guess, but only "</span> +
+						   <span class="hljs-string">" slightly better."</span>,
+			<span class="hljs-string">"website"</span>: <span class="hljs-string">""</span>,
+			<span class="hljs-string">"icon"</span>: <span class="hljs-string">"restaurant.png"</span>
+		},
+		{
+			<span class="hljs-string">"name"</span>: <span class="hljs-string">"Brew'd Craftpub"</span>,
+			<span class="hljs-string">"address"</span>: <span class="hljs-string">"3441 Waialae Ave, Honolulu, HI 96816"</span>,
+			<span class="hljs-string">"description"</span>: <span class="hljs-string">"Good bar if you are comfortable spending $8-12 per glass of beer. "</span> +
+						   <span class="hljs-string">"They could afford to lower prices by a dollar or two per drink imo. "</span> +
+						   <span class="hljs-string">"I feel kind of ripped off paying this much for beers."</span>,
+			<span class="hljs-string">"website"</span>: <span class="hljs-string">"http://www.brewdcraftpub.com"</span>,
+			<span class="hljs-string">"icon"</span>: <span class="hljs-string">"bar.png"</span>
+		},
+		{
+			<span class="hljs-string">"name"</span>: <span class="hljs-string">"Kona Kai Sushi"</span>,
+			<span class="hljs-string">"address"</span>: <span class="hljs-string">"3579 Waialae Ave, Honolulu, HI 96816"</span>,
+			<span class="hljs-string">"description"</span>: <span class="hljs-string">"The sushi chef was trained at Honolulu's famous Sasabune sushi-ya, "</span> +
+						   <span class="hljs-string">"and came to start his own restaurant in Kaimuki. Kinda pricey here."</span>,
+			<span class="hljs-string">"website"</span>: <span class="hljs-string">"http://google.com/?q=Kona Kai Sushi"</span>,
+			<span class="hljs-string">"icon"</span>: <span class="hljs-string">"restaurant.png"</span>
+		},
+		{
+			<span class="hljs-string">"name"</span>: <span class="hljs-string">"Cafe Miro"</span>,
+			<span class="hljs-string">"address"</span>: <span class="hljs-string">"http://cafemirohawaii.com"</span>,
+			<span class="hljs-string">"description"</span>: <span class="hljs-string">"One of the few places in Hawaii to get a good French meal. This is "</span> +
+						   <span class="hljs-string">"a memorable place for a date. Seems like mostly Japanese people go "</span> +
+						   <span class="hljs-string">"to this restaurant, maybe because of the Japanese ownership."</span>,
+			<span class="hljs-string">"website"</span>: <span class="hljs-string">"http://cafemirohawaii.com"</span>,
+			<span class="hljs-string">"icon"</span>: <span class="hljs-string">"restaurant.png"</span>
+		},
+		{
+			<span class="hljs-string">"name"</span>: <span class="hljs-string">"Goodwill"</span>,
+			<span class="hljs-string">"address"</span>: <span class="hljs-string">"3638 Waialae Ave, Honolulu, HI 96816"</span>,
+			<span class="hljs-string">"description"</span>: <span class="hljs-string">"Everybody loves Goodwill, and you can score here sometimes. It's "</span> +
+						   <span class="hljs-string">"not very picked over compared to most thrift stores."</span>,
+			<span class="hljs-string">"website"</span>: <span class="hljs-string">"http://higoodwill.org"</span>,
+			<span class="hljs-string">"icon"</span>: <span class="hljs-string">"shop.png"</span>
+		},
+		{
+			<span class="hljs-string">"name"</span>: <span class="hljs-string">"Movie Museum"</span>,
+			<span class="hljs-string">"address"</span>: <span class="hljs-string">"3566 Harding Ave #104, Honolulu, HI 96816"</span>,
+			<span class="hljs-string">"description"</span>: <span class="hljs-string">"They have super comfy armchairs for seating, and you can rent the"</span> +
+						   <span class="hljs-string">"whole place out to screen whatever you like. BYOB."</span>,
+			<span class="hljs-string">"website"</span>: <span class="hljs-string">"http://google.com/?q=Movie Museum Kaimuki"</span>,
+			<span class="hljs-string">"icon"</span>: <span class="hljs-string">"cinema.png"</span>
+		}
+	],
+	<span class="hljs-string">"mapstyle"</span>: 
+	[
+	    {
+	        <span class="hljs-string">"featureType"</span>: <span class="hljs-string">"landscape"</span>,
+	        <span class="hljs-string">"stylers"</span>: [
+	            {
+	                <span class="hljs-string">"saturation"</span>: -<span class="hljs-number">100</span>
+	            },
+	            {
+	                <span class="hljs-string">"lightness"</span>: <span class="hljs-number">65</span>
+	            },
+	            {
+	                <span class="hljs-string">"visibility"</span>: <span class="hljs-string">"on"</span>
+	            }
+	        ]
+	    },
+	    {
+	        <span class="hljs-string">"featureType"</span>: <span class="hljs-string">"poi"</span>,
+	        <span class="hljs-string">"stylers"</span>: [
+	            {
+	                <span class="hljs-string">"saturation"</span>: -<span class="hljs-number">100</span>
+	            },
+	            {
+	                <span class="hljs-string">"lightness"</span>: <span class="hljs-number">51</span>
+	            },
+	            {
+	                <span class="hljs-string">"visibility"</span>: <span class="hljs-string">"off"</span>
+	            }
+	        ]
+	    },
+	    {
+	        <span class="hljs-string">"featureType"</span>: <span class="hljs-string">"road.highway"</span>,
+	        <span class="hljs-string">"stylers"</span>: [
+	            {
+	                <span class="hljs-string">"saturation"</span>: -<span class="hljs-number">100</span>
+	            },
+	            {
+	                <span class="hljs-string">"visibility"</span>: <span class="hljs-string">"simplified"</span>
+	            }
+	        ]
+	    },
+	    {
+	        <span class="hljs-string">"featureType"</span>: <span class="hljs-string">"road.arterial"</span>,
+	        <span class="hljs-string">"stylers"</span>: [
+	            {
+	                <span class="hljs-string">"saturation"</span>: -<span class="hljs-number">100</span>
+	            },
+	            {
+	                <span class="hljs-string">"lightness"</span>: <span class="hljs-number">30</span>
+	            },
+	            {
+	                <span class="hljs-string">"visibility"</span>: <span class="hljs-string">"on"</span>
+	            }
+	        ]
+	    },
+	    {
+	        <span class="hljs-string">"featureType"</span>: <span class="hljs-string">"road.local"</span>,
+	        <span class="hljs-string">"stylers"</span>: [
+	            {
+	                <span class="hljs-string">"saturation"</span>: -<span class="hljs-number">100</span>
+	            },
+	            {
+	                <span class="hljs-string">"lightness"</span>: <span class="hljs-number">40</span>
+	            },
+	            {
+	                <span class="hljs-string">"visibility"</span>: <span class="hljs-string">"on"</span>
+	            }
+	        ]
+	    },
+	    {
+	        <span class="hljs-string">"featureType"</span>: <span class="hljs-string">"transit"</span>,
+	        <span class="hljs-string">"stylers"</span>: [
+	            {
+	                <span class="hljs-string">"saturation"</span>: -<span class="hljs-number">100</span>
+	            },
+	            {
+	                <span class="hljs-string">"visibility"</span>: <span class="hljs-string">"simplified"</span>
+	            }
+	        ]
+	    },
+	    {
+	        <span class="hljs-string">"featureType"</span>: <span class="hljs-string">"administrative.province"</span>,
+	        <span class="hljs-string">"stylers"</span>: [
+	            {
+	                <span class="hljs-string">"visibility"</span>: <span class="hljs-string">"off"</span>
+	            }
+	        ]
+	    },
+	    {
+	        <span class="hljs-string">"featureType"</span>: <span class="hljs-string">"water"</span>,
+	        <span class="hljs-string">"elementType"</span>: <span class="hljs-string">"labels"</span>,
+	        <span class="hljs-string">"stylers"</span>: [
+	            {
+	                <span class="hljs-string">"visibility"</span>: <span class="hljs-string">"on"</span>
+	            },
+	            {
+	                <span class="hljs-string">"lightness"</span>: -<span class="hljs-number">25</span>
+	            },
+	            {
+	                <span class="hljs-string">"saturation"</span>: -<span class="hljs-number">100</span>
+	            }
+	        ]
+	    },
+	    {
+	        <span class="hljs-string">"featureType"</span>: <span class="hljs-string">"water"</span>,
+	        <span class="hljs-string">"elementType"</span>: <span class="hljs-string">"geometry"</span>,
+	        <span class="hljs-string">"stylers"</span>: [
+	            {
+	                <span class="hljs-string">"hue"</span>: <span class="hljs-string">"#ffff00"</span>
+	            },
+	            {
+	                <span class="hljs-string">"lightness"</span>: -<span class="hljs-number">25</span>
+	            },
+	            {
+	                <span class="hljs-string">"saturation"</span>: -<span class="hljs-number">97</span>
+	            }
+	        ]
+	    }
+	]
+};
+
+
+<span class="hljs-comment">/* ======= View Controller ======= */</span>
+
+<span class="hljs-keyword">var</span> viewController = {
+	init: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+		ko.applyBindings(appViewModel(model.locations, model.mapstyle));
+		mapView.init();
+	}
+};
+
+
+<span class="hljs-comment">/* ======= View ======= */</span>
+
+<span class="hljs-keyword">var</span> mapView = {
+	init: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Vanilla JS way to listen for resizing of the window
+and adjust map bounds</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		<span class="hljs-built_in">window</span>.addEventListener(<span class="hljs-string">'resize'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(e)</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Make sure the map bounds get updated on page resize</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>			<span class="hljs-built_in">window</span>.map.fitBounds(<span class="hljs-built_in">window</span>.mapBounds);
+		});
+	},
+};
+
+$(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+	viewController.init();
+});</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

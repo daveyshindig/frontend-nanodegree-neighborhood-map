@@ -43,7 +43,7 @@ function appViewModel(locationData, mapStyles) {
         this.flickrImgs = ko.observableArray();
         this.flickrThumbs = ko.observableArray();
         this.alreadySearched = false;
-    }
+    };
 
     /**
      * Set our infoWindow to point to this LocationObject and fill it with the right data.
@@ -62,7 +62,7 @@ function appViewModel(locationData, mapStyles) {
         // I'm not using a KO template here because setContent KO observables
         // don't seem to work when passed into the setContent function.
         self.infoWindow.open(window.map, this.marker);
-    }
+    };
 
     /**
      * Make a call to the Flickr API to search for images for this object's infoWindow.
@@ -100,7 +100,7 @@ function appViewModel(locationData, mapStyles) {
         }).fail(function() {
             alert("Error: Call to Flickr API failed");
         });
-    }
+    };
 
     /**
      * Populates `infoWindow` with our divs.
@@ -247,7 +247,7 @@ function appViewModel(locationData, mapStyles) {
                 i--;
                 if (!i) {
                     clearInterval(interval);
-                };
+                }
             }, 240);
         }
 

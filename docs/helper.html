@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>helper.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page_wrapper">
+            <div id="jump_page">
+              
+                
+                <a class="source" href="app.html">
+                  app.js
+                </a>
+              
+                
+                <a class="source" href="helper.html">
+                  helper.js
+                </a>
+              
+            </div>
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>helper.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/**
+ * This file contains all of the code running in the background that makes
+ * app.js possible. We call these helper functions because they
+ * support my code in this project.
+ *
+ * @author David Wilkie
+ * @since 25 May 2015
+ * @license MIT License
+ */</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>N.b.: I’ve had some struggles with trying to ‘use strict’. See the README for details.
+“use strict”;</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-comment">/**
+ * This is the view-model, the core of our app. To be quite honest, I'm not sure if it touches the
+ * DOM too much, ie. if some of the functionalities involved with rendering the app in the browser
+ * should be factored out into a separate set of "view" functions. In any case, it Just Works, so
+ * I'm going to leave it as such, until I'm told otherwise.
+ *
+ * @param {Array} locationData An array of objects with data about our places of interest.
+ * @param {Array} mapStyles An array of styles for the Google Map we're making.
+ */</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">appViewModel</span><span class="hljs-params">(locationData, mapStyles)</span> </span>{
+    <span class="hljs-keyword">var</span> self = <span class="hljs-keyword">this</span>;
+    self.infoWindow = <span class="hljs-keyword">new</span> google.maps.InfoWindow();
+    self.query = ko.observable(<span class="hljs-string">''</span>);
+    self.filteredArray = [];
+    self.locationObjectArray = ko.observableArray();
+    self.locations = locationData;
+    self.flickrApiKey = <span class="hljs-string">"2a84a691ec088cb7c51abc607e984b63"</span>;
+
+    <span class="hljs-comment">/**
+     * We use this to store both the data from the the model and the marker we create in a common
+     * location, and later any data brought in from 3rd-party APIs.
+     *
+     * @param {Object} The item from our model.
+     * @param {Object} The corresponding Google Map marker.
+     */</span>
+    <span class="hljs-keyword">var</span> LocationObject = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(locationData, marker)</span> </span>{
+        <span class="hljs-keyword">this</span>.data = locationData;
+        <span class="hljs-keyword">this</span>.marker = marker;
+        <span class="hljs-keyword">this</span>.isVisible = ko.observable(<span class="hljs-literal">true</span>);
+        <span class="hljs-keyword">this</span>.flickrImgs = ko.observableArray();
+        <span class="hljs-keyword">this</span>.flickrThumbs = ko.observableArray();
+        <span class="hljs-keyword">this</span>.alreadySearched = <span class="hljs-literal">false</span>;
+    };
+
+    <span class="hljs-comment">/**
+     * Set our infoWindow to point to this LocationObject and fill it with the right data.
+     */</span>
+    LocationObject.prototype.makeFocus = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+        <span class="hljs-built_in">window</span>.map.setCenter(<span class="hljs-keyword">this</span>.marker.position);
+        self.infoWindow.setContent(getContentHtml(<span class="hljs-keyword">this</span>));
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.alreadySearched) {
+            <span class="hljs-keyword">this</span>.addImagesToInfoWindow();
+        }
+        <span class="hljs-keyword">else</span> {
+            $(<span class="hljs-string">"#info-window-imgs"</span>).empty()
+                                  .append(<span class="hljs-string">'&lt;img src="img/loading.gif" /&gt;'</span>);
+            <span class="hljs-keyword">this</span>.callFlickr();
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>I’m not using a KO template here because setContent KO observables
+don’t seem to work when passed into the setContent function.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        self.infoWindow.open(<span class="hljs-built_in">window</span>.map, <span class="hljs-keyword">this</span>.marker);
+    };
+
+    <span class="hljs-comment">/**
+     * Make a call to the Flickr API to search for images for this object's infoWindow.
+     */</span>
+    LocationObject.prototype.callFlickr = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>I still don’t fully understand how changing scope works, but assigning this to that
+fixes the trouble with calls to “this” from within the .get() function.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
+        <span class="hljs-keyword">var</span> url = <span class="hljs-string">"https://api.flickr.com/services/rest/"</span>;
+        <span class="hljs-keyword">var</span> params = {
+            method: <span class="hljs-string">"flickr.photos.search"</span>,
+            api_key: self.flickrApiKey,
+            text: that.data.name + <span class="hljs-string">" Kaimuki"</span>
+        };
+        that.alreadySearched = <span class="hljs-literal">true</span>;
+        $.get(url, params, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> </span>{
+            <span class="hljs-keyword">var</span> photos = $(data).find(<span class="hljs-string">"photo"</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>We’re just getting the first 5 photos from the search, at most.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; photos.length &amp;&amp; i &lt; <span class="hljs-number">5</span>; i++) {
+                <span class="hljs-keyword">var</span> photo_id = $(photos[i]).attr(<span class="hljs-string">'id'</span>);
+                <span class="hljs-keyword">var</span> secret_id = $(photos[i]).attr(<span class="hljs-string">'secret'</span>);
+                <span class="hljs-keyword">var</span> farm_id = $(photos[i]).attr(<span class="hljs-string">'farm'</span>);
+                <span class="hljs-keyword">var</span> server_id =$(photos[i]).attr(<span class="hljs-string">'server'</span>);
+                <span class="hljs-keyword">var</span> thumbnail = <span class="hljs-string">"https://farm"</span> + farm_id + <span class="hljs-string">".staticflickr.com/"</span> + server_id + <span class="hljs-string">"/"</span> +
+                                photo_id + <span class="hljs-string">"_"</span> + secret_id + <span class="hljs-string">"_t.jpg"</span>;
+                <span class="hljs-keyword">var</span> photoUrl =  <span class="hljs-string">"https://farm"</span> + farm_id + <span class="hljs-string">".staticflickr.com/"</span> + server_id + <span class="hljs-string">"/"</span> +
+                                photo_id + <span class="hljs-string">"_"</span> + secret_id + <span class="hljs-string">".jpg"</span>;
+
+                that.flickrThumbs.push(thumbnail);
+                that.flickrImgs.push(photoUrl);
+            }
+            that.addImagesToInfoWindow();
+
+        }).fail(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+            alert(<span class="hljs-string">"Error: Call to Flickr API failed"</span>);
+        });
+    };
+
+    <span class="hljs-comment">/**
+     * Populates `infoWindow` with our divs.
+     */</span>
+    LocationObject.prototype.addImagesToInfoWindow = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+        <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
+        <span class="hljs-keyword">var</span> imgDiv = $(<span class="hljs-string">"#info-window-imgs"</span>);
+        imgDiv.empty();
+        <span class="hljs-keyword">if</span> (!that.flickrThumbs().length) {
+            imgDiv.append(<span class="hljs-string">"(sorry, no pics found)"</span>);
+        }
+        that.flickrThumbs().forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(thumb, index)</span> </span>{
+            $(<span class="hljs-string">"&lt;img src='"</span> + thumb + <span class="hljs-string">"'&gt;"</span>).click(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+                $(<span class="hljs-string">"#image-overlay"</span>).html(<span class="hljs-string">'&lt;img src="'</span> + that.flickrImgs()[index] + <span class="hljs-string">'"&gt;'</span>)
+                                   .click(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+                                       $(<span class="hljs-string">"#image-overlay"</span>).empty();
+                                   });
+            })
+                .appendTo(imgDiv);
+        });
+    };
+
+    <span class="hljs-comment">/**
+     * Returns an HTML string that fills the marker's infoWindow.
+     *
+     * @param {Object} lo The locationObject with all the data we need.
+     * @return {String} The HTML for the infoWindow.
+     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getContentHtml</span><span class="hljs-params">(lo)</span> </span>{
+        <span class="hljs-keyword">var</span> ld = lo.data;
+        <span class="hljs-keyword">var</span> website = <span class="hljs-string">""</span>;
+        <span class="hljs-keyword">if</span> (ld.website) {
+            website = <span class="hljs-string">' // &lt;a href="'</span> + ld.website + <span class="hljs-string">'"&gt;Website&lt;/a&gt;'</span>;
+        }
+
+        <span class="hljs-keyword">var</span> content = <span class="hljs-string">'&lt;div class="info-window-content"&gt;'</span> +
+            <span class="hljs-string">'&lt;h3 class="info-window-heading"&gt;'</span> + ld.name + <span class="hljs-string">'&lt;/h3&gt;'</span> +
+            <span class="hljs-string">'&lt;h4&gt;'</span> + ld.address + website + <span class="hljs-string">'&lt;/h4&gt;'</span> +
+            <span class="hljs-string">'&lt;p&gt;'</span> + ld.description + <span class="hljs-string">'&lt;/p&gt;'</span> +
+            <span class="hljs-string">'&lt;div id="info-window-imgs"&gt;'</span> +
+            <span class="hljs-string">'&lt;img src="img/loading.gif" /&gt;&lt;/div&gt;'</span> +
+            <span class="hljs-string">'&lt;/div&gt;'</span>;
+
+        <span class="hljs-keyword">return</span> content;
+    }
+
+    <span class="hljs-comment">/**
+     * Called when page is loaded, this initializes a Google Map, sets markers on it for each of
+     * our locations, and centers the map.
+     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">initializeMap</span><span class="hljs-params">()</span> </span>{
+        <span class="hljs-keyword">var</span> mapOptions = {
+            disableDefaultUI: <span class="hljs-literal">true</span>,
+            mapTypeId: <span class="hljs-string">'terrain'</span>,
+            styles: mapStyles
+        };
+
+        <span class="hljs-comment">/**
+         * This function reads Google Places search results to create map pins.
+         *
+         * @param {Object} locationData The location data from our model.
+         * @author MCS, via the Udacity forums, was very helpful.
+         */</span>
+        <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createMapMarker</span><span class="hljs-params">(locationData)</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Major change: don’t just use placeData to create a map marker, use an
+object that contains even more information! The path of least resistance
+for me to make this happen is to just add the placeData to the locations
+(model.places) object when the result comes back, and pass
+<code>createMapMarker</code> the whole location object.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">var</span> placeData = locationData.placeData;
+            <span class="hljs-keyword">var</span> lat = placeData.geometry.location.lat();
+            <span class="hljs-keyword">var</span> lon = placeData.geometry.location.lng();
+            <span class="hljs-keyword">var</span> bounds = <span class="hljs-built_in">window</span>.mapBounds;
+            <span class="hljs-keyword">var</span> marker = <span class="hljs-keyword">new</span> google.maps.Marker({
+                map: <span class="hljs-built_in">window</span>.map,
+                position: placeData.geometry.location,
+                title: locationData.name,
+                icon: <span class="hljs-string">'img/'</span> + locationData.icon
+            });
+            <span class="hljs-keyword">var</span> locationObject = <span class="hljs-keyword">new</span> LocationObject(locationData, marker);
+
+            self.locationObjectArray.push(locationObject);
+            google.maps.event.addListener(marker, <span class="hljs-string">'click'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+                <span class="hljs-built_in">window</span>.map.setCenter(<span class="hljs-keyword">this</span>.position);
+                self.infoWindow.setContent(getContentHtml(locationObject));
+                <span class="hljs-keyword">if</span> (locationObject.alreadySearched) {
+                    locationObject.addImagesToInfoWindow();
+                }
+                <span class="hljs-keyword">else</span> {
+                    $(<span class="hljs-string">"#info-window-imgs"</span>).empty()
+                                          .append(<span class="hljs-string">'&lt;img src="img/loading.gif" /&gt;'</span>);
+                    locationObject.callFlickr();
+                }
+                infoWindow.open(<span class="hljs-built_in">window</span>.map, <span class="hljs-keyword">this</span>);
+            });
+
+            bounds.extend(<span class="hljs-keyword">new</span> google.maps.LatLng(lat, lon));
+            <span class="hljs-built_in">window</span>.map.fitBounds(bounds);
+            <span class="hljs-built_in">window</span>.map.setCenter(bounds.getCenter());
+        }
+
+        <span class="hljs-comment">/* We're storing the response in the location object now, and passing the whole location
+         * object to `createMapMarker`.
+         *
+         * @param {Object} locationData The location info from our model.
+         */</span>
+        <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">closureTrick</span><span class="hljs-params">(locationData)</span> </span>{
+            <span class="hljs-comment">/*
+             * callback(results, status) makes sure the search returned results for a location.
+             * If so, it creates a new map marker for that location.
+             *
+             * @param {Object} results The query results returned by Google's API.
+             * @param {Object} status The query status returned by Google's API
+             */</span>
+            <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">callback</span><span class="hljs-params">(results, status)</span> </span>{
+                <span class="hljs-keyword">if</span> (status === google.maps.places.PlacesServiceStatus.OK) {
+                    locationData.placeData = results[<span class="hljs-number">0</span>];
+                    createMapMarker(locationData);
+                }
+                <span class="hljs-keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>I unsuccessfully tried many ways of getting the program to retry
+searching for the location when the search fails, but the fact that things
+happen in the callback were just too confusing. So, error message only.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Error: Google Places search returned "</span> + status);
+                }
+            }
+            <span class="hljs-keyword">return</span> callback;
+        }
+
+        <span class="hljs-comment">/**
+         * Iterates over the array of locations created by `locationFinder()` and fires off Google
+         * place searches for each location. I'm going to do things a bit differently and use the
+         * Google Places API to search for places by name, and return the coords for the pins.
+         */</span>
+        <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">pinPoster</span><span class="hljs-params">()</span> </span>{
+            <span class="hljs-keyword">var</span> service = <span class="hljs-keyword">new</span> google.maps.places.PlacesService(<span class="hljs-built_in">window</span>.map);
+            <span class="hljs-keyword">var</span> i = self.locations.length;
+            <span class="hljs-keyword">var</span> request;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>We need to limit the number of API calls to 10 per 2 seconds</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">var</span> interval = setInterval(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+                request = {query: self.locations[i - <span class="hljs-number">1</span>].address};
+                service.textSearch(request, closureTrick(self.locations[i - <span class="hljs-number">1</span>]));
+                i--;
+                <span class="hljs-keyword">if</span> (!i) {
+                    clearInterval(interval);
+                }
+            }, <span class="hljs-number">240</span>);
+        }
+
+        <span class="hljs-built_in">window</span>.map = <span class="hljs-keyword">new</span> google.maps.Map(<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#map'</span>), mapOptions);
+        <span class="hljs-built_in">window</span>.mapBounds = <span class="hljs-keyword">new</span> google.maps.LatLngBounds();
+        $(<span class="hljs-built_in">window</span>.map).click(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+            $(<span class="hljs-string">"#image-overlay"</span>).empty();
+        });
+
+        pinPoster();
+    }
+
+    <span class="hljs-comment">/**
+     * This is run immediately when DOM is ready. I adapted code for this from the following URL:
+     * https://github.com/smith1jason/Udacity_Project_5/blob/master/js/script.js
+     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">initializeQuery</span><span class="hljs-params">()</span> </span>{
+        self.query.subscribe(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+            self.infoWindow.close();
+            self.filteredArray = ko.observableArray($.grep(self.locationObjectArray(),
+                                                    <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(locationObject)</span> </span>{
+                <span class="hljs-keyword">var</span> title = locationObject.marker.title.toLowerCase();
+                <span class="hljs-keyword">return</span> title.startsWith(self.query().toLowerCase());
+            }));
+            <span class="hljs-keyword">var</span> newArray = ko.utils.compareArrays(self.locationObjectArray(),
+                                                  self.filteredArray());
+            ko.utils.arrayForEach(newArray, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(locationObject)</span> </span>{
+                <span class="hljs-keyword">if</span> (locationObject.status === <span class="hljs-string">'deleted'</span>) {
+                    locationObject.value.marker.setVisible(<span class="hljs-literal">false</span>);
+                    locationObject.value.isVisible(<span class="hljs-literal">false</span>);
+                }
+                <span class="hljs-keyword">else</span> {
+                    locationObject.value.marker.setVisible(<span class="hljs-literal">true</span>);
+                    locationObject.value.isVisible(<span class="hljs-literal">true</span>);
+                }
+            });
+        });
+    }
+
+    initializeMap();
+    initializeQuery();
+}</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

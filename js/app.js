@@ -5,7 +5,6 @@
  * @since 19 May 2015
  * @copyright Copyright 2015 David Wilkie
  */
- "use strict";
 
 /* ======= Model ======= */
 
@@ -319,7 +318,7 @@ var mapView = {
 		// and adjust map bounds
 		window.addEventListener('resize', function(e) {
 			// Make sure the map bounds get updated on page resize
-			map.fitBounds(mapBounds);
+			window.map.fitBounds(window.mapBounds);
 		});
 	},
 };

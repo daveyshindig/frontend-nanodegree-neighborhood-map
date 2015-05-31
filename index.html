@@ -3,11 +3,16 @@
 <head>
   <meta name="viewport" content="width=device-width">
   <meta charset="UTF-8">
+
   <link href="css/main.css" rel="stylesheet" type="text/css"></link>
   <link href="css/simple-sidebar.css" rel="stylesheet" type="text/css"></link>
   <!-- Delivering the Bootstrap from an external CDN is sensible enough. -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+  <!-- inject:css -->
+  <!-- any *.css files among sources will go here as: <link rel="stylesheet" href="FILE"> -->
+  <!-- endinject -->
 </head>
+
 <body>
    <div id="wrapper">
 
@@ -37,36 +42,16 @@
     <!-- /#page-content-wrapper -->
 
   </div>
-  <!-- /#wrapper -->
 
-<!--   <div class="container">
-    <div id="map">
-    </div>
-    <div class="header-container">
-      <h2>The Neighborhood of Kaimuki, Honolulu</h2>
-    </div>
-    <div class="list-container">
-      <form class="query-container">
-        <input type="text" data-bind="textInput: query" name="query" placeholder="Filter">
-      </form>
-      <ul data-bind="foreach: locationObjectArray" >
-        <li data-bind="text: marker.title, visible: isVisible, click: makeFocus"></li>
-      </ul>
-    </div>
-    <div id="image-overlay"></div>
-  </div> -->
-
-  <script src="js/jQuery.js"></script>
-  <script src="https://maps.googleapis.com/maps/api/js?libraries=places"></script>
-  <script src="js/knockout.js"></script>
-  <script src="js/helper.js"></script>
-  <!--
-  The next line tells the browser where to download the JavaScript file
-  that builds the app dynamically when this website, index.html, is opened.
-  -->
-  <script src="js/app.js"></script>
-  <!-- Latest compiled and minified JavaScript -->
+  <script src="lib/jquery-1.11.1.min.js"></script>
+  <script src="lib/knockout.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?libraries=places"></script>
+  <script src="js/app.min.js"></script>
+
+  <!-- inject:js -->
+  <!-- any *.js files among your sources will go here as: <script src="FILE"></script> -->
+  <!-- endinject -->
 
     <!-- Menu Toggle Script -->
     <script>
@@ -75,3 +60,6 @@
         $("#wrapper").toggleClass("toggled");
     });
     </script>
+</body>
+
+</html>
